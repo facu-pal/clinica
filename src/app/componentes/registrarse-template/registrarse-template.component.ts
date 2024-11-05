@@ -23,12 +23,11 @@ import { ImgurService } from '../../services/imgur.service';
 import { UpperCasePipe } from '@angular/common';
 const uppercasePipe = new UpperCasePipe();
 
-import { FormErrorDirective } from '../../directives/form-error.directive';
 
 @Component({
   selector: 'app-registrarse-template',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule,FormErrorDirective,NgSelectModule],
+  imports: [ReactiveFormsModule,CommonModule,NgSelectModule],
   templateUrl: './registrarse-template.component.html',
   styleUrl: './registrarse-template.component.css'
 })

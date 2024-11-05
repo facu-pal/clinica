@@ -31,13 +31,13 @@
 			<div class="col-md-6 mb-3">
 				<label for="firstName">Nombre</label>
 				<input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" appFormError
-					[isValid]="!signUpForm.controls['firstName'].errors">
+					>
 			</div>
 
 			<div class="col-md-6 mb-3">
 				<label for="lastName">Apellido</label>
 				<input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" appFormError
-					[isValid]="!signUpForm.controls['lastName'].errors">
+					>
 			</div>
 		</div>
 
@@ -45,23 +45,21 @@
 			<div class="col-md-2 mb-3">
 				<label for="age">Edad</label>
 				<input type="number" class="form-control" id="age" name="age" min="0" max="125" formControlName="age"
-					appFormError [isValid]="!signUpForm.controls['age'].errors">
+					>
 			</div>
 
 			<div class="mb-3" [class]="signUpForm.get('role')?.value !== 'admin' ? 'col-md-4' : 'col-md-10'">
 				<label for="idNo">DNI</label>
 				<div class="input-group">
 					<div class="input-group-prepend"><span class="input-group-text rounded-end-0">#</span></div>
-					<input type="text" class="form-control" id="idNo" placeholder="" formControlName="idNo" appFormError
-						[isValid]="!signUpForm.controls['idNo'].errors">
+					<input type="text" class="form-control" id="idNo" placeholder="" formControlName="idNo" appFormError>
 				</div>
 			</div>
 
 			<div class="col-md-6 mb-3" *ngIf="signUpForm.get('role')?.value === 'paciente'">
 				<label for="healthPlan">Plan social</label>
 				<div class="input-group">
-					<select class="form-control text-center" id="healthPlan" formControlName="hcp" appFormError
-						[isValid]="!signUpForm.controls['hcp'].errors">
+					<select class="form-control text-center" id="healthPlan" formControlName="hcp" >
 						<option [ngValue]="null" disabled selected>Seleciona obra social</option>
 						<option *ngFor="let hcp of healthCarePlans" [ngValue]="hcp">{{hcp.value}}</option>
 					</select>
@@ -151,7 +149,7 @@
 			<div class="input-group">
 				<div class="input-group-prepend"><span class="input-group-text rounded-end-0">&#64;</span></div>
 				<input type="email" class="form-control" id="email" name="email" placeholder="you@example.com"
-					formControlName="email" appFormError [isValid]="!signUpForm.controls['email'].errors">
+					>
 			</div>
 		</div>
 
@@ -160,13 +158,13 @@
 				<label for="password">Contraseña</label><i class="px-2 bi bi-info-circle" appTooltip
 					message="Password must be between 6 and 20 characters."></i>
 				<input type="password" class="form-control" id="password" name="new-password" formControlName="password"
-					appFormError [isValid]="!signUpForm.controls['password'].errors">
+					>
 			</div>
 			<div class="col-md-6 mb-3">
 				<label for="passCheck">Contraseña validacion</label><i class="px-2 bi bi-info-circle" appTooltip
 					message="Password must match."></i>
 				<input type="password" class="form-control" id="passCheck" name="new-password" formControlName="passCheck"
-					appFormError [isValid]="!signUpForm.controls['passCheck'].errors">
+					>
 			</div>
 		</div>
 
