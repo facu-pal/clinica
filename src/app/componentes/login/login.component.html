@@ -1,0 +1,25 @@
+    <div class="d-flex align-items-center justify-content-center container-login">
+    <form class="bg-light rounded p-5 shadow-lg login-form">
+      <h3 class="text-center mb-4">Iniciar sesion</h3>
+  
+      <div class="form-group mb-3">
+        <label class="mb-2" for="email">Email</label>
+        <input type="text" class="form-control shadow-sm" id="email" [(ngModel)]="email" name="email" placeholder="Ingresa tu email" required>
+      </div>
+  
+      <div class="form-group mb-4">
+        <label class="mb-2" for="password">Contraseña</label>
+        <input type="password" class="form-control shadow-sm" id="password" [(ngModel)]="password" name="password" placeholder="Ingresa tu contraseña" required>
+      </div>
+  
+      <div class="d-grid gap-2">
+        <button (click)="login()" class="btn btn-primary btn-lg shadow-sm mb-2">Iniciar sesion</button>
+        <a class="nav nav-link active text-decoration-underline" (click)="navigate('registrarse')">Registrarse</a>
+        <button (click)="autoCompletar1()" class="btn btn-secondary btn-lg shadow-sm">Autocompletar admin</button>
+        <button (click)="autoCompletar2()" class="btn btn-secondary btn-lg shadow-sm">Autocompletar empleado</button>
+        <button (click)="autoCompletar3()" class="btn btn-secondary btn-lg shadow-sm">Autocompletar paciente</button>
+
+      </div>
+    </form>
+  </div>
+  
