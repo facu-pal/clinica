@@ -189,11 +189,11 @@ export class NewAccountTemplateComponent {
 					inputAttributes: { "accept": "image/*", "ariaLabel": 'Choose an image.' },
 					inputLabel: "Add an image (Optional).",
 					allowOutsideClick: false,
-					confirmButtonText: 'Submit',
-					cancelButtonText: 'Skip',
+					confirmButtonText: 'subir',
+					cancelButtonText: 'omitir',
 					inputValidator: (value) => {
 						if (!value) {
-							return "You need to choose an image! Or just skip it.";
+							return "Eliga una imagen o omitir.";
 						}
 						return undefined;
 					},
@@ -206,7 +206,7 @@ export class NewAccountTemplateComponent {
 			this.db.addDataAutoId('specialties', spec);
 			ToastSuccess.fire(`${spec.value} added`);
 		} else
-			ToastError.fire('Operation cancelled.');
+			ToastError.fire('Operacion cancelada.');
 	}
 
 	imgsUploaded(): boolean {
@@ -220,7 +220,7 @@ export class NewAccountTemplateComponent {
 	imgUpload($event: any) {
 		const auxFile: File = $event.target.files[0];
 		if (!auxFile.type.startsWith('image')) {
-			Swal.fire('Oops...', 'You must choose an image type file.', 'error');
+			Swal.fire('Oops...', 'Debes elegir un archivo de tipo de imagen.', 'error');
 			return;
 		}
 
@@ -255,10 +255,10 @@ export class NewAccountTemplateComponent {
 	}
 
 	async signUp() {
-		if (!this.recaptcha) {
-			ToastError.fire('Resolve the Captcha');
-			return;
-		}
+		 if (!this.recaptcha) {
+		 	ToastError.fire('Resuelve el captcha ');
+		 	return;
+		 }
 
 		Loader.fire();
 		await this.constructUser()
@@ -271,7 +271,7 @@ export class NewAccountTemplateComponent {
 				if (error instanceof NotLoggedError)
 					this.router.navigateByUrl('login');
 				else if (error.code === 'auth/email-already-in-use')
-					error.message = 'This email is already registered.';
+					error.message = 'Este mail ya esta registrado.';
 
 				ToastError.fire({ title: 'Oops...', text: error.message });
 			});

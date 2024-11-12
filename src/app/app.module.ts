@@ -78,7 +78,7 @@ import { UserNamePipe } from './pipes/user-name.pipe';
 		{
 			provide: RECAPTCHA_SETTINGS,
 			useValue: {
-				siteKey: '6LeSZAgpAAAAAHRPUZqCIcH8A67aH5hC3md1ykka',
+				siteKey: '6LeC0HwqAAAAAKaI6AKYpE_M36f2nQoMbUeap6UY',
 			} as RecaptchaSettings,
 		}
 	],

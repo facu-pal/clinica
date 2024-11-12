@@ -1,6 +1,6 @@
 .background {
-	background-color: #3CAF98;
-	background: linear-gradient(to bottom, #3CAF98 0%, #3CAF98 35%, #f8f9fa 35%, #f8f9fa 100%);
+	background: rgba(85, 112, 246, 0.808);
+
 }
 
 .py-10 {
