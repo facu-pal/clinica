@@ -1,0 +1,75 @@
+<div class="main min-vh-100 text-center bg-custom">
+	<div class="container py-4 w-75">
+		<div class="card bg-light bg-opacity-50 rounded px-5 py-3">
+			<h2 class="mb-3 font-weight-normal">Sacar turno</h2>
+			<form class="needs-validation">
+
+				<div class="col mb-3">
+					<label for="patientId">Paciente DNI</label>
+					<input [readOnly]="user.role === 'patient'" type="number" class="form-control text-center mb-2" id="patientId"
+						[(ngModel)]="patientIdNo" name="patientIdNo">
+					<button *ngIf="user.role !== 'patient'" class="btn btn-primary btn-lg btn-block" (click)="lookUpPatient()">
+						Buscar paciente
+					</button>
+				</div>
+
+				<div *ngIf="specialist; else docList">
+					<p class="fs-3 fst-italic text-decoration-underline" role="button" (click)="selectSpecialist(null)">
+						{{ specialist | userName }}
+					</p>
+				</div>
+				<ng-template #docList>
+					<div class="mb-2" *ngIf="specialists.length > 0">
+						<app-user-btn-list [userList]="specialists" (btnPressed)="selectSpecialist($event)"
+							containerClass="col-auto d-flex flex-column align-items-center"
+							imgClass="border border-3 border-black rounded-circle d-flex align-items-center"
+							imgWidth="80px"
+							imgHeight="80px"
+							[patientLimit]="0"
+							[adminLimit]="0"
+							roleDisplay="none"
+							nameDisplay="top"
+						></app-user-btn-list>
+					</div>
+				</ng-template>
+
+				<div *ngIf="specialty; else specsList">
+					<p class="fs-4 fst-italic text-decoration-underline" role="button" (click)="selectSpecialty(null)">
+						{{specialty.value}}
+					</p>
+				</div>
+				<ng-template #specsList>
+					<div class="mb-2 row d-flex align-items-center justify-content-center"
+						*ngIf="availableSpecialties.length > 0">
+						<div *ngFor="let spec of availableSpecialties; index as i"
+							class="col-auto image-div d-flex flex-column align-items-center">
+							<img [src]="spec.imgUrl" [alt]="spec+'_'+i" [id]="spec.id" role="button" class="rounded-2"
+								(click)="selectSpecialty(spec)">
+						</div>
+					</div>
+				</ng-template>
+
+				<hr class="mb-4">
+
+				<div *ngIf="!dateChosen; else hoursList">
+					<div class="mb-2 row d-flex align-items-center justify-content-center" *ngIf="groupedDates.length > 0">
+						<div *ngFor="let date of groupedDates" class="col-auto d-flex flex-column align-items-center pb-2">
+							<button class="btn btn-outline-primary " (click)="selectDate(date)">{{date[0]}}</button>
+						</div>
+					</div>
+				</div>
+				<ng-template #hoursList>
+					<p class="fs-4 fst-italic text-decoration-underline" role="button" (click)="selectDate(null)">
+						{{dateChosen | date: 'YYYY/MM/dd'}}
+					</p>
+					<div class="mb-2 row d-flex align-items-center justify-content-center" *ngIf="selectedDayAvHours.length > 0">
+						<div *ngFor="let hour of selectedDayAvHours" class="col-auto d-flex flex-column align-items-center pb-2">
+							<button class="btn btn-outline-primary" (click)="selectTime(hour)">{{hour | date: 'HH:mm'}}</button>
+						</div>
+					</div>
+				</ng-template>
+
+			</form>
+		</div>
+	</div>
+</div>

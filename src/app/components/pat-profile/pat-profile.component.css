@@ -1,0 +1,13 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Fondo personalizado para cubrir toda la pantalla */
+.bg-custom {
+    background: rgba(85, 112, 246, 0.808);
+    min-height: 100vh; /* Asegura que cubra toda la pantalla */
+   
+    padding: 20px 0;
+}

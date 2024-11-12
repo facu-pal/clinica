@@ -1,0 +1,73 @@
+<div class="bg-custom">
+	<div *ngIf="userInSession.role === 'admin'" class="new-user d-flex justify-content-center mb-4">
+		<div *ngIf="!creatingUser">
+			<span class="nav nav-link active text-decoration-underline mx-5 custom-text-color" role="button" (click)="creatingUser = true">
+				Crear nuevo usuario
+			</span>
+		</div>
+		<div *ngIf="creatingUser">
+			<hr class="my-2">
+			<span class="nav nav-link active text-decoration-underline mx-5 custom-text-color" role="button" (click)="creatingUser = false">
+				Cancelar
+			</span>
+	
+			<app-new-account-template [admin]="true" (createdUser)="newAccount($event)"></app-new-account-template>
+		</div>
+	</div>
+	<hr class="my-2">
+
+<h2 class="text-center ">Lista de usuarios</h2>
+<div class="container d-flex justify-content-center">
+	<table class="table table-striped align-middle mb-0 bg-white table-hover w-75">
+		<thead class="bg-light">
+			<tr>
+				<th>Usuario</th>
+				<th class="text-center">Rol</th>
+				<th class="text-center">DNI</th>
+				<th class="text-center">Habilitar/desabilitar</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let user of users">
+				<td class="col-md-2">
+					<div class="d-flex align-items-center">
+						<div style="width: 60px; height: 60px;" [class]="user.role === 'patient' ? 'pat-img' : ''"
+							class="overflow-hidden border border-1 border-black rounded-circle d-flex align-items-center">
+							<img [src]="user.imgUrl1" [alt]="'img_'+user.idNo" [id]="user.idNo"
+								(click)="showMedicalHistory(user)">
+						</div>
+						<div class="ms-3">
+							<p class="fw-bold mb-0">{{user | userName}}, {{user.age}}</p>
+							<p class="text-muted mb-0">{{user.email}}</p>
+						</div>
+					</div>
+				</td>
+				<td class="col-md-1 text-center">
+					<div class="ms-3" [ngSwitch]="user.role">
+						<span class="badge rounded-pill bg-success" *ngSwitchCase="'admin'">Admin</span>
+						<span class="badge rounded-pill bg-danger" *ngSwitchCase="'patient'">Paciente</span>
+						<span class="badge rounded-pill bg-warning" role="button" *ngSwitchCase="'specialist'"
+							(click)="showSpecs(user)">Especialista</span>
+					</div>
+				</td>
+				<td class="col-md-1 text-center">
+					<div class="ms-3">
+						<p class="fw-normal mb-0">{{user.idNo}}</p>
+					</div>
+				</td>
+				<td class="col-md-1 text-center">
+					<div class="ms-3">
+						<button class="btn btn-primary fw-normal mb-0" *ngIf="user.role === 'specialist'"
+							(click)="toggleEnable(user)">
+							{{(parseSpecialist(user))!.isEnabled ? 'Deshabilitar' : 'Habilitar'}}
+						</button>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+
+
+</div>

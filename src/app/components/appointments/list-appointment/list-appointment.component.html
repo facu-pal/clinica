@@ -1,0 +1,105 @@
+<div class="bg-custom">
+
+	<h2 class="text-center mt-5">turnos</h2>
+	
+	<app-appt-filter
+		[appointmentList]="appointments"
+		(filteredList)="appointmentsToShow = $event">
+	</app-appt-filter>
+	
+	<div class="container d-flex justify-content-center">
+		<table class="table table-striped align-middle mb-0 bg-white table-hover w-75">
+			<thead class="bg-light">
+				<tr>
+					<th>{{user.role === 'patient' ? 'Especialista' : 'Paciente'}}</th>
+					<th *ngIf="user.role === 'admin'">Doctor</th>
+					<th class="text-center">Fecha</th>
+					<th class="text-center">Estado</th>
+					<th class="text-center">Accion</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let appt of appointmentsToShow">
+					<td class="col-md-auto">
+						<div class="d-flex align-items-center">
+							<div class="ms-3" *ngIf="user.role === 'patient'">
+								<p class="fw-bold mb-0">{{appt.specialist | userName | titlecase}}</p>
+								<p class="text-muted mb-0">{{appt.specialty.value}}</p>
+							</div>
+							<div class="ms-3" *ngIf="user.role !== 'patient'">
+								<p class="fw-bold mb-0">{{appt.patient | userName | titlecase}}</p>
+								<p class="text-muted mb-0">{{appt.patient.healthPlan.value}}</p>
+							</div>
+						</div>
+					</td>
+					<td *ngIf="user.role === 'admin'" class="col-md-auto">
+						<div class="d-flex align-items-center">
+							<div class="ms-3">
+								<p class="fw-bold mb-0">{{appt.specialist | userName | titlecase}}</p>
+								<p class="text-muted mb-0">{{appt.specialty.value}}</p>
+							</div>
+						</div>
+					</td>
+					<td class="col-md-auto text-center">
+						<p class="fw-normal mb-0">{{appt.date | date: 'YYYY/MM/dd, HH:mm'}}</p>
+					</td>
+					<td class="col-md-auto text-center">
+						<span *ngIf="appt.status === 'done'" class="badge rounded-pill bg-success">Completado</span>
+						<span *ngIf="appt.status === 'pending'" class="badge rounded-pill bg-warning">Pendiente</span>
+						<span *ngIf="appt.status === 'cancelled'" class="badge rounded-pill bg-danger">Cancelado</span>
+						<span *ngIf="appt.status === 'declined'" class="badge rounded-pill bg-secondary">Rechazado</span>
+						<span *ngIf="appt.status === 'accepted'" class="badge rounded-pill bg-primary">Aceptado</span>
+					</td>
+					<td class="col-md-auto">
+						<ul class="nav list-group-inline justify-content-center">
+							<li
+								*ngIf="(user.role === 'patient' && appt.status === 'pending') || (user.role !== 'patient' && appt.status === 'accepted')"
+								class="nav-item">
+								<button class="nav-link active text-decoration-underline px-1">
+									Cancelar
+								</button>
+							</li>
+							<li *ngIf="appt.status !== 'pending' && appt.status !== 'accepted' &&
+										((user.role === 'specialist' && appt.patReview) || (user.role !== 'specialist' && appt.specReview))"
+								class="nav-item">
+								<button class="nav-link active text-decoration-underline px-1" >
+									Ver reseña
+								</button>
+							</li>
+							<li *ngIf="user.role === 'patient' && appt.status === 'done' && appt.specReview && !appt.patSurvey"
+								class="nav-item">
+								<button class="nav-link active text-decoration-underline px-1" >
+									Completar encuensta
+								</button>
+							</li>
+							<li *ngIf="user.role === 'patient' && appt.status === 'done' && !appt.patReview" class="nav-item">
+								<button class="nav-link active text-decoration-underline px-1">
+									Escribir reseña
+								</button>
+							</li>
+							<li *ngIf="user.role === 'specialist' && appt.status === 'pending'" class="nav-item">
+								<button class="nav-link active text-decoration-underline px-1">
+									Rechazar
+								</button>
+							</li>
+							<li *ngIf="user.role === 'specialist' && appt.status === 'pending'" class="nav-item">
+								<button class="nav-link active text-decoration-underline px-1">
+									Aceptar
+								</button>
+							</li>
+							<li *ngIf="user.role === 'specialist' && appt.status === 'accepted'" class="nav-item">
+								<button class="nav-link active text-decoration-underline px-1" >
+									Terminar
+								</button>
+							</li>
+						</ul>
+					</td>
+				</tr>
+				<p *ngIf="appointmentsToShow.length === 0" class="text-center">
+					No hay citas para mostrar
+				</p>
+			</tbody>
+		</table>
+	</div>
+	
+	</div>

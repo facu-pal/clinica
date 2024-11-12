@@ -1,0 +1,59 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.ng-select .ng-select-container {
+	border: 1px solid #dee2e6;
+	min-height: 37.6px;
+	border-bottom-left-radius: 0 !important;
+	border-top-left-radius: 0 !important;
+}
+
+.break-spaces {
+	white-space: break-spaces !important;
+}
+
+.myTooltip {
+	display: inline-block;
+	border: 2px solid azure;
+	visibility: visible;
+	max-width: 200px;
+	width: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: azure;
+	text-align: center;
+	padding: 5px;
+	border-radius: 6px;
+	position: absolute;
+	z-index: 1;
+	cursor: default;
+}
+
+.myTooltip::before {
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent #f1f1f1 transparent;
+}
+
+.scroll-top-btn {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin: 1.5rem;
+	border-radius: 50%;
+	border: 0;
+	opacity: 60%;
+	display: none;
+}

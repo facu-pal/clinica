@@ -1,0 +1,182 @@
+<div class="card bg-light bg-opacity-50 text-center rounded px-5 py-3">
+	<h2 class="mb-3 font-weight-normal ">Crear una cuenta</h2>
+	<form class="needs-validation" [formGroup]="signUpForm" (ngSubmit)="signUp()">
+		<div class="roles row d-flex justify-content-center">
+			<div class="col-md-2 text-center">
+				<input type="radio" id="img-specialist" class="d-none" value="specialist" formControlName="role"
+					(change)="roleChange()">
+				<label for="img-specialist" appTooltip message="Medico">
+					<img src="../../../assets/medico.png" class=" border border-1 border-black rounded-2" role="button"
+						height="50px" alt="Specialist">
+				</label>
+			</div>
+			<div class="col-md-2 text-center">
+				<input type="radio" id="img-patient" class="d-none" value="patient" formControlName="role"
+					(change)="roleChange()">
+				<label for="img-patient" appTooltip message="Paciente">
+					<img src="../../../assets/paciente.png" class=" border border-1 border-black rounded-2" role="button"
+						height="50px" alt="Patient">
+				</label>
+			</div>
+			<!-- -->
+			<div *ngIf="admin"  class="col-md-2 text-center">
+				<input type="radio" id="img-admin" class="d-none" value="admin" formControlName="role" (change)="roleChange()">
+				<label for="img-admin" appTooltip message="Admin">
+					<img src="../../../assets/admin.png" class=" border border-1 border-black rounded-2" role="button"
+						height="50px" alt="Admin">
+				</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 mb-3">
+				<label for="firstName">Nombre</label>
+				<input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" appFormError
+					[isValid]="!signUpForm.controls['firstName'].errors">
+			</div>
+
+			<div class="col-md-6 mb-3">
+				<label for="lastName">Apellido</label>
+				<input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" appFormError
+					[isValid]="!signUpForm.controls['lastName'].errors">
+			</div>
+		</div>
+
+		<div class="row align-items-center">
+			<div class="col-md-2 mb-3">
+				<label for="age">Edad</label>
+				<input type="number" class="form-control" id="age" name="age" min="0" max="125" formControlName="age"
+					appFormError [isValid]="!signUpForm.controls['age'].errors">
+			</div>
+
+			<div class="mb-3" [class]="signUpForm.get('role')?.value !== 'admin' ? 'col-md-4' : 'col-md-10'">
+				<label for="idNo">DNI</label>
+				<div class="input-group">
+					<div class="input-group-prepend"><span class="input-group-text rounded-end-0">#</span></div>
+					<input type="text" class="form-control" id="idNo" placeholder="" formControlName="idNo" appFormError
+						[isValid]="!signUpForm.controls['idNo'].errors">
+				</div>
+			</div>
+
+			<div class="col-md-6 mb-3" *ngIf="signUpForm.get('role')?.value === 'patient'">
+				<label for="healthPlan">Plan social</label>
+				<div class="input-group">
+					<select class="form-control text-center" id="healthPlan" formControlName="hcp" appFormError
+						[isValid]="!signUpForm.controls['hcp'].errors">
+						<option [ngValue]="null" disabled selected>Seleciona un plan social</option>
+						<option *ngFor="let hcp of healthCarePlans" [ngValue]="hcp">{{hcp.value}}</option>
+					</select>
+					<div class="input-group-prepend"><span class="input-group-text rounded-start-0"><i
+								class="bi bi-box-arrow-down"></i></span></div>
+				</div>
+			</div>
+
+			<div class="col-md-6 mb-3" *ngIf="signUpForm.get('role')?.value === 'specialist'">
+				<label for="specialty">especialidad</label>
+				<div class="input-group">
+					<div class="input-group-prepend d-flex">
+						<span role="button" class="input-group-text rounded-end-0 flex-fill" (click)="addNewSpecialty()">
+							<i class="bi bi-plus-circle"></i>
+						</span>
+					</div>
+					<ng-select class="text-center col" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+						formControlName="specialties" placeholder="← Agregar nueva especialidad">
+						<ng-option *ngFor="let spec of specialties" [value]="spec">
+							<img [src]="spec.imgUrl" [alt]="spec.value" height="30px">
+							{{spec.value}}
+						</ng-option>
+					</ng-select>
+				</div>
+			</div>
+		</div>
+
+		<hr class="mb-4">
+		<div class="row">
+			<div class="custom-file"
+				[class]="signUpForm.get('role')?.value === 'patient' ? 'col-md-6' : signUpForm.get('role')?.value === 'specialist' ? 'col-md-7 d-flex flex-wrap align-content-center' : 'col'">
+				<div class="input-group">
+					<div class="input-group-prepend"><span class="input-group-text rounded-end-0 d-flex justify-content-center"><i
+								class="bi bi-upload"></i></span>
+					</div>
+					<label class="custom-file-label bg-white rounded-end text-truncate col" for="img1">
+						{{imgFile1Label}}</label>
+					<input type="file" class="form-control" accept="image/*" id="img1" (change)="imgUpload($event)">
+				</div>
+			</div>
+			<div class="custom-file col-md-6" *ngIf="signUpForm.get('role')?.value === 'patient'">
+				<div class="input-group">
+					<div class="input-group-prepend"><span class="input-group-text rounded-end-0 d-flex justify-content-center">
+							<i class="bi bi-upload"></i></span></div>
+					<label class="custom-file-label bg-white rounded-end text-truncate col" for="img2">
+						{{imgFile2Label}}</label>
+					<input type="file" class="form-control" accept="image/*" id="img2" (change)="imgUpload($event)">
+				</div>
+			</div>
+			<div class="col-md-5" *ngIf="signUpForm.get('role')?.value === 'specialist'">
+				<label for="workingDays">Seleciona dia de trabajo:</label>
+				<div class="list-group-inline" id="workingDays">
+					<input type="checkbox" class="btn-check" value="0" id="sunday" autocomplete="off"
+						(click)="onWorkDayClick($event)" [disabled]="signUpForm.controls['workingDays'].disabled">
+					<label class="btn btn-outline-primary mx-1 mb-1" for="sunday">Domingo</label>
+
+					<input type="checkbox" class="btn-check" value="1" id="monday" autocomplete="off"
+						(click)="onWorkDayClick($event)" [disabled]="signUpForm.controls['workingDays'].disabled">
+					<label class="btn btn-outline-primary mx-1 mb-1" for="monday">Lunes</label>
+
+					<input type="checkbox" class="btn-check" value="2" id="tuesday" autocomplete="off"
+						(click)="onWorkDayClick($event)" [disabled]="signUpForm.controls['workingDays'].disabled">
+					<label class="btn btn-outline-primary mx-1 mb-1" for="tuesday">Martes</label>
+
+					<input type="checkbox" class="btn-check" value="3" id="wednesday" autocomplete="off"
+						(click)="onWorkDayClick($event)" [disabled]="signUpForm.controls['workingDays'].disabled">
+					<label class="btn btn-outline-primary mx-1 mb-1" for="wednesday">Miercoles</label>
+
+					<input type="checkbox" class="btn-check" value="4" id="thursday" autocomplete="off"
+						(click)="onWorkDayClick($event)" [disabled]="signUpForm.controls['workingDays'].disabled">
+					<label class="btn btn-outline-primary mx-1 mb-1" for="thursday">Jueves</label>
+
+					<input type="checkbox" class="btn-check" value="5" id="friday" autocomplete="off"
+						(click)="onWorkDayClick($event)" [disabled]="signUpForm.controls['workingDays'].disabled">
+					<label class="btn btn-outline-primary mx-1 mb-1" for="friday">Viernes</label>
+
+					<input type="checkbox" class="btn-check" value="6" id="saturday" autocomplete="off"
+						(click)="onWorkDayClick($event)" [disabled]="signUpForm.controls['workingDays'].disabled">
+					<label class="btn btn-outline-primary mx-1 mb-1" for="saturday">Sabado</label>
+				</div>
+			</div>
+		</div>
+
+		<hr class="mb-4">
+		<div class="mb-3">
+			<label for="email">mail</label>
+			<div class="input-group">
+				<div class="input-group-prepend"><span class="input-group-text rounded-end-0">&#64;</span></div>
+				<input type="email" class="form-control" id="email" name="email" placeholder="you@example.com"
+					formControlName="email" appFormError [isValid]="!signUpForm.controls['email'].errors">
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 mb-3">
+				<label for="password">Contraseña</label><i class="px-2 bi bi-info-circle" appTooltip
+					message="Password must be between 6 and 20 characters."></i>
+				<input type="password" class="form-control" id="password" name="new-password" formControlName="password"
+					appFormError [isValid]="!signUpForm.controls['password'].errors">
+			</div>
+			<div class="col-md-6 mb-3">
+				<label for="passCheck">Validar Contraseña</label><i class="px-2 bi bi-info-circle" appTooltip
+					message="Password must match."></i>
+				<input type="password" class="form-control" id="passCheck" name="new-password" formControlName="passCheck"
+					appFormError [isValid]="!signUpForm.controls['passCheck'].errors">
+			</div>
+		</div>
+
+		<div *ngIf="signUpForm.valid" class="captcha d-flex justify-content-center mb-2">
+			<re-captcha (resolved)="handleCaptchaResponse($event)"></re-captcha>
+		</div>
+
+		<button class="btn btn-primary btn-lg btn-block" type="submit"
+			[disabled]="signUpForm.invalid || !imgsUploaded()">Registrarse</button>
+
+	</form>
+</div>
