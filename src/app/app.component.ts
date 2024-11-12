@@ -4,14 +4,14 @@ import { AuthService } from './services/auth.service';
 import { ToastInfo } from './environments/environment';
 import { Specialist } from './classes/specialist';
 import { User } from './classes/user';
-import { animations } from './routeAnimations';
+
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css'],
 	encapsulation: ViewEncapsulation.None,
-	animations: [animations]
+	animations: []
 })
 export class AppComponent {
 	title = 'Clinica';

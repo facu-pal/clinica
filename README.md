@@ -9,7 +9,7 @@ Trabajo practico final gestion de turnos y alta de usuarios
 Esta primera pagina es la pagina donde te dan la bienvenida y podes ir a inicar sesion o registrarse 
 
 ![bienvenida1](image/README/bienvenida1.png)
-![bienvenida2](image/README/bienvenida2.png)
+
 
 
 ### ✔️ Registrarse
