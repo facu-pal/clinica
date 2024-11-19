@@ -17,9 +17,14 @@ export class AccountComponent {
 
 	constructor(private auth: AuthService, private db: DatabaseService, private router: Router) {
 		this.user = auth.LoggedUser;
-		if (this.user?.role === 'specialist')
-			this.specialist = this.user as Specialist;
-	}
+		if (this.user?.role === 'specialist') {
+		  this.specialist = this.user as Specialist;
+		  // Initialize workingDays if it is not already set
+		  if (!this.specialist.workingDays) {
+			this.specialist.workingDays = [];
+		  }
+		}
+	  }
 
 	saveShift() {
 		if (this.specialist!.shiftStart < '08:30' || this.specialist!.shiftEnd > '18:30')
@@ -32,6 +37,15 @@ export class AccountComponent {
 				.catch((error: any) => ToastError.fire('Oops...', error.message));
 		}
 	}
+
+	toggleWorkingDay(day: number) {
+		const index = this.specialist!.workingDays.indexOf(day);
+		if (index >= 0) {
+		  this.specialist!.workingDays.splice(index, 1);
+		} else {
+		  this.specialist!.workingDays.push(day);
+		}
+	  }
 
 	signOut() {
 		this.auth.signOut()

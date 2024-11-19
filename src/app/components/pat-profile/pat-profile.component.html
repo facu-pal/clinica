@@ -2,5 +2,12 @@
 
     <app-account></app-account>
 
-</div>
 
+
+<app-patient-history
+	[exportBtn]="true"
+	exportBtnText="Descargar PDF"
+	[patient]="user"
+	(exportEvent)="downloadPDF($event)"
+></app-patient-history>
+</div>

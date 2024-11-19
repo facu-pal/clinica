@@ -1,8 +1,4 @@
 <div class="main pb-5">
-	<div class="d-flex justify-content-center">
-		<button *ngIf="exportBtn" class="btn btn-primary btn-md my-3"
-			(click)="emitList(appointmentsToShow)">{{exportBtnText}}</button>
-	</div>
 
 	<app-appt-filter
 		[appointmentList]="pastAppointments"
@@ -13,10 +9,10 @@
 		<table class="table table-striped align-middle mb-0 bg-white table-hover w-75">
 			<thead class="bg-light">
 				<tr>
-					<th>Specialist</th>
-					<th class="text-center">Date</th>
-					<th class="text-center">Diagnosis</th>
-					<th class="text-center">Review</th>
+					<th>especializacion</th>
+					<th class="text-center">Fecha</th>
+					<th class="text-center">Diagnostico</th>
+					<th class="text-center">Reseña</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -40,10 +36,14 @@
 					</td>
 				</tr>
 				<p *ngIf="appointmentsToShow.length === 0" class="text-center">
-					There are no appointments to show
+					No hay citas historial para mostrar.
 				</p>
 			</tbody>
 		</table>
+	</div>
+	<div class="d-flex justify-content-center">
+		<button *ngIf="exportBtn" class="btn btn-primary btn-md my-3"
+			(click)="emitList(appointmentsToShow)">{{exportBtnText}}</button>
 	</div>
 
 	<button class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-4" *ngIf="dialogRef"

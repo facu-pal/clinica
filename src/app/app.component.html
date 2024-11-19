@@ -7,13 +7,16 @@
 			<ng-container *ngIf="user; else notLogged">
 				<li class="nav-item"><a class="nav-link" *ngIf="user.role !== 'specialist' && isValid" routerLink="/sacar-turno">Nuevo turno</a></li>
 				<li class="nav-item"><a class="nav-link" *ngIf="isValid" routerLink="/ver-turnos">Turnos</a></li>
-				
+				<li class="nav-item"><a class="nav-link" *ngIf="user.role === 'specialist' && isValid" routerLink="/mis-pacientes">Mis pacientes</a></li>
+
 				<li class="nav-item"><a class="nav-link" *ngIf="user.role === 'admin' && isEmailVerif" routerLink="/usuarios">Usuarios</a></li>
-				<li class="nav-item"><a class="nav-link" *ngIf="user.role === 'patient'" routerLink="/mi-perfil">Mi perfil</a></li>
-				<li class="nav-item"><a class="nav-link" *ngIf="user.role !== 'patient' && isValid" routerLink="/perfil">Perfil</a></li>
 				
 				<li class="nav-item"><a class="nav-link" *ngIf="user.role === 'specialist' && !isValid" routerLink="/habilitar-especialista">Enable</a></li>
+				<li class="nav-item"><a class="nav-link" *ngIf="user.role === 'admin' && isEmailVerif" routerLink="/informes/logs">Logs</a></li>
 				<li class="nav-item"><a class="nav-link" *ngIf="!isEmailVerif" routerLink="/verificar-cuenta">Verificar</a></li>
+				
+				<li class="nav-item"><a class="nav-link" *ngIf="user.role === 'patient'" routerLink="/mi-perfil">Mi perfil</a></li>
+				<li class="nav-item"><a class="nav-link" *ngIf="user.role !== 'patient' && isValid" routerLink="/perfil">Perfil</a></li>
 			</ng-container>
 
 			<ng-template #notLogged>

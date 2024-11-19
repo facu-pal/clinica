@@ -2,42 +2,42 @@
 	<form [formGroup]="loginForm" class="form-signin bg-light bg-opacity-50 rounded" (ngSubmit)="signIn()">
 		<h1 class="h3 mb-3 font-weight-normal">Iniciar sesion</h1>
 
-		<div class="quick-access mb-2" *ngIf="users.length > 0">
-			<app-user-btn-list [userList]="users" (btnPressed)="quickFill($event)"
-			containerClass="col-md-2 d-flex flex-column align-items-center"
-			imgClass="border border-3 border-black rounded-2 d-flex align-items-center" 
-			imgWidth="60px"
-			imgHeight="60px"
-			[patientLimit]="3"
-			[specialistLimit]="2"
-			[adminLimit]="1"
-			roleDisplay="bottom"
-			></app-user-btn-list>
-		</div>
-
+		
 		<input type="email" id="inputEmail" class="form-control" placeholder="mail" formControlName="email"
-			name="email" required>
+		name="email" required>
 		<div class="bg-danger bg-opacity-50 m-auto w-75"
-			*ngIf="loginForm.controls['email'].errors !== null && loginForm.controls['email'].touched">
-			<small *ngIf="loginForm.controls['email'].errors!['required']">
-				El mail es obligarorio.
-			</small>
-			<small *ngIf="loginForm.controls['email'].errors!['email']">
-				Mail invalido.
-			</small>
-		</div>
+		*ngIf="loginForm.controls['email'].errors !== null && loginForm.controls['email'].touched">
+		<small *ngIf="loginForm.controls['email'].errors!['required']">
+			El mail es obligarorio.
+		</small>
+		<small *ngIf="loginForm.controls['email'].errors!['email']">
+			Mail invalido.
+		</small>
+	</div>
+	
+	<input type="password" id="inputPassword" class="form-control mb-0" placeholder="contraseña"
+	formControlName="password" name="current-password" required>
+	<div class="bg-danger bg-opacity-50 m-auto w-75"
+	*ngIf="loginForm.controls['password'].errors !== null && loginForm.controls['password'].touched">
+	<small *ngIf="loginForm.controls['password'].errors!['required']">
+		La contraseña es obligatoria.
+	</small>
+</div>
 
-		<input type="password" id="inputPassword" class="form-control mb-0" placeholder="contraseña"
-			formControlName="password" name="current-password" required>
-		<div class="bg-danger bg-opacity-50 m-auto w-75"
-			*ngIf="loginForm.controls['password'].errors !== null && loginForm.controls['password'].touched">
-			<small *ngIf="loginForm.controls['password'].errors!['required']">
-				La contraseña es obligatoria.
-			</small>
-		</div>
+<button class="btn btn-lg btn-primary btn-block mt-3" [disabled]="loginForm.invalid" type="submit">Iniciar sesion</button>
 
-		<button class="btn btn-lg btn-primary btn-block mt-3" [disabled]="loginForm.invalid" type="submit">Iniciar sesion</button>
-
-		<a class="nav nav-link active text-decoration-underline" routerLink="/registrarse">Crear una cuenta</a>
+<a class="nav nav-link active text-decoration-underline" routerLink="/registrarse">Crear una cuenta</a>
+<div class="quick-access mb-2" *ngIf="users.length > 0">
+	<app-user-btn-list [userList]="users" (btnPressed)="quickFill($event)"
+	containerClass="col-md-2 d-flex flex-column align-items-center"
+	imgClass="border border-3 border-black rounded-2 d-flex align-items-center" 
+	imgWidth="60px"
+	imgHeight="60px"
+	[patientLimit]="3"
+	[specialistLimit]="2"
+	[adminLimit]="1"
+	roleDisplay="bottom"
+	></app-user-btn-list>
+</div>
 	</form>
 </div>

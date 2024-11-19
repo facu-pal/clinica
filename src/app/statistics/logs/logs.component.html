@@ -3,10 +3,10 @@
 	<table class="table table-striped align-middle mb-0 bg-white table-hover w-75">
 		<thead class="bg-light">
 			<tr>
-				<th>User</th>
-				<th class="text-center">Role</th>
-				<th class="text-center">Pers. ID</th>
-				<th class="text-center">Date</th>
+				<th>Usuarios</th>
+				<th class="text-center">Rol</th>
+				<th class="text-center">DNI</th>
+				<th class="text-center">Fecha</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -25,9 +25,9 @@
 				</td>
 				<td class="col-md-1 text-center">
 					<div class="ms-3" [ngSwitch]="log.user.role">
-						<span class="badge rounded-pill bg-success" *ngSwitchCase="'admin'">{{log.user.role | uppercase}}</span>
-						<span class="badge rounded-pill bg-danger" *ngSwitchCase="'patient'">{{log.user.role | uppercase}}</span>
-						<span class="badge rounded-pill bg-warning" *ngSwitchCase="'specialist'">{{log.user.role | uppercase}}</span>
+						<span class="badge rounded-pill bg-success" *ngSwitchCase="'admin'">Admin</span>
+						<span class="badge rounded-pill bg-danger" *ngSwitchCase="'patient'">Paciente</span>
+						<span class="badge rounded-pill bg-warning" *ngSwitchCase="'specialist'">Especialista</span>
 					</div>
 				</td>
 				<td class="col-md-1 text-center">

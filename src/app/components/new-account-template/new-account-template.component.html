@@ -1,4 +1,20 @@
-<div class="card bg-light bg-opacity-50 text-center rounded px-5 py-3">
+<div class="image-selection" *ngIf="!roleSelected">
+    <div class="image-container">
+        <div class="image-box">
+            <img src="../../../assets/medico.png" (click)="selectRole('specialist')" class="rol-img" alt="Specialist">
+        </div>
+        <div class="image-box">
+            <img src="../../../assets/paciente.png" (click)="selectRole('patient')" class="rol-img" alt="Patient">
+        </div>
+		<div *ngIf="admin" class="image-box">
+            <img src="../../../assets/admin.png" (click)="selectRole('admin')" class="rol-img" alt="admin">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card bg-light bg-opacity-50 text-center rounded px-5 py-3" *ngIf="roleSelected">
 	<h2 class="mb-3 font-weight-normal ">Crear una cuenta</h2>
 	<form class="needs-validation" [formGroup]="signUpForm" (ngSubmit)="signUp()">
 		<div class="roles row d-flex justify-content-center">
@@ -6,29 +22,28 @@
 				<input type="radio" id="img-specialist" class="d-none" value="specialist" formControlName="role"
 					(change)="roleChange()">
 				<label for="img-specialist" appTooltip message="Medico">
-					<img src="../../../assets/medico.png" class=" border border-1 border-black rounded-2" role="button"
-						height="50px" alt="Specialist">
+					<img src="../../../assets/medico.png" class="border border-1 border-black rounded-2" role="button"
+					height="50px" width="75"  alt="Specialist">
 				</label>
 			</div>
 			<div class="col-md-2 text-center">
 				<input type="radio" id="img-patient" class="d-none" value="patient" formControlName="role"
 					(change)="roleChange()">
 				<label for="img-patient" appTooltip message="Paciente">
-					<img src="../../../assets/paciente.png" class=" border border-1 border-black rounded-2" role="button"
-						height="50px" alt="Patient">
+					<img src="../../../assets/paciente.png" class="border border-1 border-black rounded-2" role="button"
+					height="50px"  width="75" alt="Patient">
 				</label>
 			</div>
-			<!-- -->
 			<div *ngIf="admin"  class="col-md-2 text-center">
 				<input type="radio" id="img-admin" class="d-none" value="admin" formControlName="role" (change)="roleChange()">
 				<label for="img-admin" appTooltip message="Admin">
-					<img src="../../../assets/admin.png" class=" border border-1 border-black rounded-2" role="button"
-						height="50px" alt="Admin">
+					<img src="../../../assets/admin.png" class="border border-1 border-black rounded-2" role="button"
+					height="50px" width="75"  alt="Admin">
 				</label>
 			</div>
 		</div>
 
-		<div class="row">
+		<div class="row mb-2">
 			<div class="col-md-6 mb-3">
 				<label for="firstName">Nombre</label>
 				<input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" appFormError

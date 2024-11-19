@@ -28,3 +28,38 @@ input[type="file"] {
 	transform: scale(1.25);
 	transition: all .5s ease;
 }
+
+.role-img {
+    width: 100%; /* Para que ocupe todo el ancho disponible del contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
+    aspect-ratio: 4 / 3; /* Define la proporción deseada (4:3 en este caso) */
+     /* Ajusta la imagen para que rellene el espacio */
+    border-radius: 4px; /* Redondeo opcional */
+}
+/* nuevo */
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh; /* Centra verticalmente en la pantalla */
+}
+
+.image-box {
+    margin: 0 10px;
+    border: 2px solid black;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #fff; /* Fondo blanco para el contenedor */
+}
+
+.rol-img {
+    cursor: pointer;
+    width: 250px; /* Ajusta el tamaño según sea necesario */
+    height: 150px;
+    transition: transform 0.2s;
+}
+
+.rol-img:hover {
+    transform: scale(1.1);
+}
+

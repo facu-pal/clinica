@@ -21,6 +21,7 @@ const uppercasePipe = new UpperCasePipe();
 })
 export class NewAccountTemplateComponent {
 	signUpForm: FormGroup;
+	roleSelected: boolean = false;
 
 	protected healthCarePlans: Array<StringIdValuePair> = [];
 	protected specialties: Array<Specialty> = [];
@@ -112,6 +113,12 @@ export class NewAccountTemplateComponent {
 				]
 			],
 		});
+	}
+
+	selectRole(role: string) {
+		this.signUpForm.get('role')?.setValue(role);
+		this.roleSelected = true;
+		this.roleChange();
 	}
 
 	async ngOnInit() {

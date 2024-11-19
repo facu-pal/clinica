@@ -32,7 +32,7 @@ export class PatProfileComponent {
 				columns: [
 					{ text: datePipe.transform(date, 'longDate'), margin: [15, 15, 0, 0], alignment: 'left' },
 					{
-						image: await this.getBase64ImageFromURL('https://cdn-icons-png.flaticon.com/512/4434/4434378.png'),
+						image: await this.getBase64ImageFromURL('https://img.icons8.com/?size=500&id=43219&format=png&color=000000'),
 						fit: [25, 25],
 						margin: [15, 15, 0, 0],
 						alignment: 'right'
@@ -40,7 +40,7 @@ export class PatProfileComponent {
 				]
 			},
 			content: [
-				{ text: 'Medical History', fontSize: 18, bold: true, decoration: 'underline', alignment: 'center', margin: [0, 5, 0, 5] },
+				{ text: 'Historial medico', fontSize: 18, bold: true, decoration: 'underline', alignment: 'center', margin: [0, 5, 0, 5] },
 				{ text: `${this.user.firstName} ${this.user.lastName}, ${this.user.idNo}`, fontSize: 14, italics: true, alignment: 'center', margin: [0, 5, 0, 30] },
 				{
 					layout: 'lightHorizontalLines',
@@ -53,18 +53,18 @@ export class PatProfileComponent {
 			],
 		};
 
-		pdf.createPdf(<TDocumentDefinitions>docDef).download(`${this.user.idNo}_medical_history.pdf`);
+		pdf.createPdf(<TDocumentDefinitions>docDef).download(`${this.user.firstName}_${this.user.lastName}_historial_medico.pdf`);
 	}
 
 	parseAppointments(appts: Array<Appointment>): Array<Array<any>> {
 		let bodyRows: Array<Array<any>> = []
 		if (appts.length > 0) {
 			bodyRows.push([
-				{ text: 'Date', bold: true, fontSize: 13 },
-				{ text: 'Specialty', bold: true, fontSize: 13 },
-				{ text: 'Specialist', bold: true, fontSize: 13 },
-				{ text: "Specialist's review", bold: true, fontSize: 13 },
-				{ text: 'Diagnostic', bold: true, fontSize: 13 }
+				{ text: 'Fecha', bold: true, fontSize: 13 },
+				{ text: 'Especialidad', bold: true, fontSize: 13 },
+				{ text: 'Especialsta', bold: true, fontSize: 13 },
+				{ text: "Reseña del especialista", bold: true, fontSize: 13 },
+				{ text: 'Diagnóstico', bold: true, fontSize: 13 }
 			]);
 			for (const appt of appts) {
 				const row: Array<any> = [
@@ -79,7 +79,7 @@ export class PatProfileComponent {
 			}
 		} else
 			bodyRows.push([
-				{ text: 'There are no appointments to show.', italics: true }
+				{ text: 'No hay historial medico para mostrarte.', italics: true }
 			]);
 
 		return bodyRows;

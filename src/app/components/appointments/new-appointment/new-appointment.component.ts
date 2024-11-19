@@ -22,181 +22,160 @@ const usersDbPath = 'users';
 	providers: [DatePipe]
 })
 export class NewAppointmentComponent {
-	private appointments: Array<Appointment> = [];
+    private appointments: Array<Appointment> = [];
 
-	user: User;
-	private specialtyArray: Array<Specialty> = [];
-	specialists: Array<Specialist> = [];
-	availableSpecialties: Array<Specialty> = []; //Specialties of the chosen specialist
-	private availableDates: Array<Date> = [];
-	//										Day,	Hours
-	groupedDates: Array<[string, Date[]]> = [];
-	selectedDayAvHours: Array<Date> = [];
+    user: User;
+    specialtyArray: Array<Specialty> = [];
+    specialists: Array<Specialist> = [];
+    availableSpecialties: Array<Specialty> = []; 
+    private availableDates: Array<Date> = [];
+    groupedDates: Array<[string, Date]> = [];
+    selectedDayAvHours: Array<Date> = [];
 
-	constructor(private db: DatabaseService, private router: Router, private datePipe: DatePipe) {
-		this.user = inject(AuthService).LoggedUser!;
-	}
+    constructor(private db: DatabaseService, private router: Router, private datePipe: DatePipe) {
+        this.user = inject(AuthService).LoggedUser!;
+    }
 
-	patientIdNo: number = 0;
-	patient: Patient | null = null;
-	specialty: Specialty | null = null;
-	specialist: Specialist | null = null;
-	dateChosen: Date | null = null;
+    patientIdNo: number = 0;
+    patient: Patient | null = null;
+    specialty: Specialty | null = null;
+    specialist: Specialist | null = null;
+    dateChosen: Date | null = null;
 
-	private readonly timestampParse = async (appt: Appointment) => {
-		appt.date = appt.date instanceof Timestamp ? appt.date.toDate() : appt.date;
-		return appt;
-	}
-	async ngOnInit() {
-		Loader.fire();
-		if (this.user.role === 'patient') {
-			this.patientIdNo = this.user.idNo;
-			this.patient = this.user as Patient;
-		}
+    private readonly timestampParse = async (appt: Appointment) => {
+        appt.date = appt.date instanceof Timestamp ? appt.date.toDate() : appt.date;
+        return appt;
+    }
+    async ngOnInit() {
+        Loader.fire();
+        if (this.user.role === 'patient') {
+            this.patientIdNo = this.user.idNo;
+            this.patient = this.user as Patient;
+        }
 
-		this.db.listenColChanges<Appointment>(apptDbPath, this.appointments, undefined, undefined, this.timestampParse);
-		this.db.listenColChanges<Specialty>('specialties', this.specialtyArray);
-		this.db.listenColChanges<Specialist>(usersDbPath, this.specialists, (usr => usr.role === 'specialist' && (usr as Specialist).isEnabled));
+        this.db.listenColChanges<Appointment>(apptDbPath, this.appointments, undefined, undefined, this.timestampParse);
+        this.db.listenColChanges<Specialty>('specialties', this.specialtyArray);
+        this.db.listenColChanges<Specialist>(usersDbPath, this.specialists, (usr => usr.role === 'specialist' && (usr as Specialist).isEnabled));
 
-		Loader.close();
-	}
+        Loader.close();
+    }
 
-	lookUpPatient() {
-		this.db.searchUserByIdNo(this.patientIdNo)
-			.then(user => {
-				if (user.role !== 'patient')
-					throw new Error('Esta identificación no pertenece a ningún paciente');
+    lookUpPatient() {
+        this.db.searchUserByIdNo(this.patientIdNo)
+            .then(user => {
+                if (user.role !== 'patient')
+                    throw new Error('Esta identificación no pertenece a ningún paciente');
 
-				const patient = user as Patient;
-				ToastSuccess.fire({ title: `${patient.firstName} ${patient.lastName}, ${patient.healthPlan.value}` });
-				this.patient = patient;
-			})
-			.catch((error: any) => {
-				this.patient = null;
-				this.specialist = null;
-				ToastError.fire({ title: 'Oops...', text: error.message });
-			});
-	}
+                const patient = user as Patient;
+                ToastSuccess.fire({ title: `${patient.firstName} ${patient.lastName}, ${patient.healthPlan.value}` });
+                this.patient = patient;
+            })
+            .catch((error: any) => {
+                this.patient = null;
+                this.specialist = null;
+                ToastError.fire({ title: 'Oops...', text: error.message });
+            });
+    }
 
-	selectSpecialist(specialist: User | null) {
-		this.specialty = null;
-		this.groupedDates = [];
-		this.availableDates = [];
-		if (!specialist) {
-			this.specialist = null;
-			this.availableSpecialties = [];
-		} else {
-			this.specialist = (specialist) as Specialist;
-			const specsId = this.specialist!.specialties.map(spec => spec.id);
+    async selectSpecialty(specialty: Specialty | null) {
+        this.specialty = specialty;
+        this.specialist = null;
+        this.groupedDates = [];
+        this.availableDates = [];
+        if (!specialty) return;
 
-			this.availableSpecialties =
-				this.specialtyArray.filter(spec => specsId.includes(spec.id));
-		}
-	}
+        this.specialists = this.specialists.filter(spec => spec.specialties.some(s => s.id === specialty.id));
+    }
+    selectSpecialist(specialist: User | null) {
+      this.specialist = specialist as Specialist;
+      this.groupedDates = [];
+      this.availableDates = [];
+      if (!specialist) {
+          this.availableSpecialties = [];
+      } else {
+          const allDates = this.getAllSpecDates();
+          const existingAppts = this.appointments.filter(appt =>
+              appt.specialist.id == this.specialist!.id
+              && appt.specialty.id == this.specialty!.id
+              && appt.status !== 'cancelled');
 
-	async selectSpecialty(specialty: Specialty | null) {
-		this.specialty = specialty;
-		this.groupedDates = [];
-		if (!specialty) return;
+          const takenDates = existingAppts.map(appt => appt.date instanceof Timestamp ? appt.date.toDate() : appt.date);
+          this.availableDates = allDates.filter(date => !takenDates.some(apptDate => apptDate.getTime() === date.getTime()));
 
-		const allDates = this.getAllSpecDates();
-		const existingAppts = this.appointments.filter(appt =>
-			appt.specialist.id == this.specialist!.id
-			&& appt.specialty.id == this.specialty!.id
-			&& appt.status !== 'cancelled');
+          this.groupDatesByDay();
+      }
+  }
 
-		const takenDates = existingAppts.map(appt => appt.date instanceof Timestamp ? appt.date.toDate() : appt.date);
-		this.availableDates = allDates.filter(date => !takenDates.some(apptDate => apptDate.getTime() === date.getTime()));
+  private getAllSpecDates(): Array<Date> {
+      let datesArray: Array<Date> = [];
 
-		this.groupDatesByDay();
-	}
+      // Obtener horas y minutos de inicio del turno
+      let [hoursStartStr, minutesStartStr] = this.specialist!.shiftStart.split(':');
+      const hoursStart = parseInt(hoursStartStr, 10);
+      const minutesStart = parseInt(minutesStartStr, 10);
 
-	/**
-	 * Returns all the dates the specialist can take appointments, whether they are free or not.
-	 */
-	private getAllSpecDates(): Array<Date> {
-		let datesArray: Array<Date> = [];
+      // Obtener horas y minutos de fin del turno
+      let [hoursEndStr, minutesEndStr] = this.specialist!.shiftEnd.split(':');
+      const hoursEnd = parseInt(hoursEndStr, 10);
+      const minutesEnd = parseInt(minutesEndStr, 10);
 
-		let [hoursStr, minutesStr] = this.specialist!.shiftStart.split(':');
-		const hoursStart = parseInt(hoursStr, 10);
-		const minutesStart = parseInt(minutesStr, 10);
-		const startDate: Date = new Date();
-		startDate.setDate(startDate.getDate() + 1); //Next day
-		startDate.setHours(hoursStart, minutesStart, 0, 0);
+      // Fecha de inicio: el próximo día laborable del especialista a la hora de inicio del turno
+      let startDate: Date = new Date();
+      startDate.setDate(startDate.getDate() + 1); // Día siguiente
+      startDate.setHours(hoursStart, minutesStart, 0, 0);
 
-		[hoursStr, minutesStr] = this.specialist!.shiftEnd.split(':');
-		const hoursEnd = parseInt(hoursStr, 10);
-		const minutesEnd = parseInt(minutesStr, 10);
-		const endDate: Date = new Date(startDate);
-		endDate.setDate(endDate.getDate() + 15); //15 days from start day
-		endDate.setHours(hoursEnd, minutesEnd, 0, 0);
+      // Fecha de fin: 15 días después de la fecha de inicio a la hora de fin del turno
+      let endDate: Date = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 15); // 15 días a partir del día siguiente
+      endDate.setHours(hoursEnd, minutesEnd, 0, 0);
 
-		let auxDate: Date = new Date(startDate);
+      let auxDate: Date = new Date(startDate);
 
-		while (auxDate < endDate) {
-			if (this.specialist?.workingDays.includes(auxDate.getDay())) {
-				datesArray.push(new Date(auxDate));
-				auxDate.setMinutes(auxDate.getMinutes() + 15);
-				if (auxDate.getHours() === 18 && auxDate.getMinutes() === 30) {
-					auxDate.setDate(auxDate.getDate() + 1);
-					auxDate.setHours(8, 30, 0, 0);
-				}
-			} else {
-				auxDate.setDate(auxDate.getDate() + 1);
-			}
-		}
+      while (auxDate < endDate) {
+          if (this.specialist!.workingDays.includes(auxDate.getDay())) {
+              let tempDate: Date = new Date(auxDate);
+              // Generar fechas y horas dentro del horario laboral del especialista
+              while (tempDate.getHours() < hoursEnd || (tempDate.getHours() === hoursEnd && tempDate.getMinutes() < minutesEnd)) {
+                  datesArray.push(new Date(tempDate));
+                  tempDate.setMinutes(tempDate.getMinutes() + 15); // Incrementar en intervalos de 15 minutos
+              }
+          }
+          auxDate.setDate(auxDate.getDate() + 1); // Pasar al siguiente día
+          auxDate.setHours(hoursStart, minutesStart, 0, 0); // Restablecer a la hora de inicio del turno
+      }
 
-		return datesArray;
-	}
+      return datesArray; // Devolver todas las fechas disponibles
+  }
 
-	private groupDatesByDay() {
-		const tempMap = new Map<string, Date[]>();
+  private groupDatesByDay() {
+      this.groupedDates = this.availableDates.map(date => {
+          const dateTimeStr = this.datePipe.transform(date, 'yyyy/MM/dd HH:mm');
+          return [dateTimeStr, date] as [string, Date];
+      });
+  }
 
-		this.availableDates.forEach(date => {
-			const fullDay = this.datePipe.transform(date, 'YYYY/MM/dd');
-			if (!tempMap.has(fullDay!)) {
-				tempMap.set(fullDay!, [date]);
-			} else {
-				tempMap.get(fullDay!)!.push(date);
-			}
-		});
-
-		this.groupedDates = Array.from(tempMap);
-	}
-
-	selectDate(date: [string, Date[]] | null) {
-		if (!date) {
-			this.dateChosen = null;
-			return;
-		}
-		
-		this.dateChosen = new Date(date[0]);
-		this.selectedDayAvHours = date[1];
-	}
-
-	selectTime(date: Date) {
-		const hours = date.getHours();
-		const mins = date.getMinutes();
-		this.dateChosen!.setHours(hours, mins);
-		const fullDate = this.datePipe.transform(date, 'YYYY/MM/dd, HH:mm');
-		Swal.fire({
-			title: "Confirmar cita",
-			text: `${fullDate}; with Dr. ${this.specialist!.lastName}, ${this.specialty!.value}`,
-			icon: "question",
-			showCancelButton: true,
-			confirmButtonColor: "#3085d6",
-			cancelButtonColor: "#d33",
-			confirmButtonText: "Confirmar"
-		}).then((result) => {
-			if (result.isConfirmed) {
-				const newAppt: any = new Appointment('', this.patient!, this.specialty!, this.specialist!, date, 'pending', '', null, '', null);
-				this.db.addDataAutoId(apptDbPath, newAppt);
-				Swal.fire({
-					title: "Turno agregado",
-					text: "Te esperamos en Av. Mitre 750.",
-					icon: "success"
-				}).then(() => this.router.navigateByUrl('home'));
-			}
-		});
-	}
+  selectTime(date: Date) {
+      this.dateChosen = new Date(date); // Asignar directamente la fecha completa
+      const fullDate = this.datePipe.transform(date, 'yyyy/MM/dd, HH:mm');
+      Swal.fire({
+          title: "Confirmar cita",
+          text: `${fullDate}; con Dr. ${this.specialist!.lastName}, ${this.specialty!.value}`,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Confirmar"
+      }).then((result) => {
+          if (result.isConfirmed) {
+              const newAppt: any = new Appointment('', this.patient!, this.specialty!, this.specialist!, date, 'pending', '', null, '', null);
+              this.db.addDataAutoId(apptDbPath, newAppt);
+              Swal.fire({
+                  title: "Turno agregado",
+                  text: "Te esperamos en Av. Mitre 750.",
+                  icon: "success"
+              }).then(() => this.router.navigateByUrl('home'));
+          }
+      });
+  }
 }
+

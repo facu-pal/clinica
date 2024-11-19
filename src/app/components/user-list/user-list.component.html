@@ -24,7 +24,7 @@
 				<th>Usuario</th>
 				<th class="text-center">Rol</th>
 				<th class="text-center">DNI</th>
-				<th class="text-center">Habilitar/desabilitar</th>
+				<th class="text-center">Acciones</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -34,7 +34,7 @@
 						<div style="width: 60px; height: 60px;" [class]="user.role === 'patient' ? 'pat-img' : ''"
 							class="overflow-hidden border border-1 border-black rounded-circle d-flex align-items-center">
 							<img [src]="user.imgUrl1" [alt]="'img_'+user.idNo" [id]="user.idNo"
-								(click)="showMedicalHistory(user)">
+								>
 						</div>
 						<div class="ms-3">
 							<p class="fw-bold mb-0">{{user | userName}}, {{user.age}}</p>
@@ -61,6 +61,10 @@
 							(click)="toggleEnable(user)">
 							{{(parseSpecialist(user))!.isEnabled ? 'Deshabilitar' : 'Habilitar'}}
 						</button>
+						<button class="btn btn-primary fw-normal mb-0" *ngIf="user.role === 'patient'"
+                                (click)="showMedicalHistory(user)">
+                                Historial Médico
+                            </button>
 					</div>
 				</td>
 			</tr>

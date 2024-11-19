@@ -65,4 +65,96 @@ export class ListAppointmentComponent {
 				return 'bg-danger';
 		}
 	}
+
+	async changeApptStatus(appt: Appointment, newStatus: ApptStatus) {
+		let swalInput: SweetAlertResult<string> | undefined;
+		switch (newStatus) {
+			case 'cancelled':
+			case 'declined':
+				if (this.user.role !== 'patient') {
+					swalInput = await InputSwal.fire({ inputLabel: "¿Por qué cancelas esta cita?" });
+					if (!swalInput?.value) break;
+				}
+
+				const confirmed = await Swal.fire({
+					title: "Confirmar",
+					text: '¿Estás segura de que deseas cancelar esta cita?',
+					icon: "question",
+					showCancelButton: true,
+					confirmButtonColor: "#3085d6",
+					cancelButtonColor: "#d33",
+					cancelButtonText: "No, volver",
+					confirmButtonText: "Si, Cancelar"
+				}).then((result) => result.isConfirmed);
+
+				if (confirmed)
+					this.db.updateDoc(apptDbPath, appt.id, { specReview: appt.specReview, status: newStatus });
+				break;
+			case 'accepted':
+				this.db.updateDoc(apptDbPath, appt.id, { status: newStatus });
+				break;
+			case 'done':
+				swalInput = await InputSwal.fire({ inputLabel: "Deja un comentario para la o el paciente" });
+				if (!swalInput?.value) break;
+				const review = swalInput?.value;
+
+				const dialogRef = this.dialog.open(ApptDiagnosisComponent, {
+					width: '800px',
+				});
+				dialogRef.componentInstance.patient = this.user as Patient;
+
+				dialogRef.afterClosed().subscribe(diagnosis => {
+					if (diagnosis) {
+						appt.diagnosis = diagnosis;
+						this.db.updateDoc(apptDbPath, appt.id, { specReview: review, diagnosis: {...diagnosis}, status: newStatus });
+					}
+				});
+
+				break;
+		}
+	}
+
+	showReview(appt: Appointment) {
+		if (this.user.role !== 'specialist') {
+			Swal.fire(`Dr. ${appt.specialist.lastName} said:`, appt.specReview)
+				.then(() => {
+					if (appt.diagnosis) {
+						Swal.fire({
+							title: 'Diagnosis:',
+							text: Diagnosis.getData(appt.diagnosis),
+							customClass: { container: 'break-spaces' }
+						});
+					}
+				});
+		} else
+			Swal.fire(`${appt.patient.lastName} said:`, appt.patReview);
+	}
+
+	fillSurvey(appt: Appointment) {
+		const dialogRef = this.dialog.open(ApptSurveyComponent, {
+			width: '800px',
+
+		});
+		dialogRef.componentInstance.patient = this.user as Patient;
+
+		dialogRef.afterClosed().subscribe(survey => {
+			if (survey) {
+				appt.patSurvey = survey;
+				this.db.updateDoc(apptDbPath, appt.id, { patSurvey: survey })
+					.then(() => ToastSuccess.fire('Encuesta cargada', 'Cita cerrada.'));
+			}
+		});
+	}
+
+	async patientReview(appt: Appointment) {
+		let review: SweetAlertResult<string> | undefined;
+		if (this.user.role === 'patient') {
+			review = await InputSwal.fire({ inputLabel: "Deja un comentaria para el o la especialista" });
+		}
+
+		if (review?.value) {
+			appt.patReview = review.value;
+			this.db.updateDoc(apptDbPath, appt.id, { patReview: review.value });
+		}
+	}
 }

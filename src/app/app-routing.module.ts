@@ -15,9 +15,11 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { notSpecGuard } from './guards/not-spec.guard';
 import { NewAppointmentComponent } from './components/appointments/new-appointment/new-appointment.component';
 import { ListAppointmentComponent } from './components/appointments/list-appointment/list-appointment.component';
+import { MyPatientsComponent } from './components/my-patients/my-patients.component';
 import { PatProfileComponent } from './components/pat-profile/pat-profile.component';
 import { patGuard } from './guards/pat.guard';
 import { notPatGuard } from './guards/not-pat.guard';
+
 
 const routes: Routes = [
 	{
@@ -33,12 +35,13 @@ const routes: Routes = [
 		path: 'iniciarSesion',
 		canActivate: [notLoggedGuard],
 		component: LoginComponent,
-		
+		data:{animate: 'isTop'}
 	},
 	{
 		path: 'registrarse',
 		canActivate: [notLoggedGuard],
 		component: SignupComponent,
+		data:{animate: 'isBottom'}
 	},
 	{
 		path: 'verificar-cuenta',
@@ -54,26 +57,44 @@ const routes: Routes = [
 		path: 'perfil',
 		canActivate: [notPatGuard, validAccountGuard],
 		component: AccountComponent,
+		data: { animation: 'isTop'}
 	},
 	{
 		path: 'usuarios',
 		canActivate: [adminGuard, validAccountGuard],
 		component: UserListComponent,
+		data: { animation: 'isRight'}
 	},
 	{
 		path: 'sacar-turno',
 		canActivate: [notSpecGuard, validAccountGuard],
 		component: NewAppointmentComponent,
+		data: { animation: 'isLeft'}
 	},
 	{
 		path: 'ver-turnos',
 		canActivate: [validAccountGuard],
 		component: ListAppointmentComponent,
+		data: { animation: 'isRight'}
 	},
+	{
+		path: 'mis-pacientes',
+		canActivate: [ validAccountGuard],
+		component: MyPatientsComponent,
+		data: { animation: 'isLeft'}
+	},
+	
 	{
 		path: 'mi-perfil',
 		canActivate: [patGuard, validAccountGuard],
 		component: PatProfileComponent,
+		data: { animation: 'isBottom'}
+	},
+	{
+		path: 'informes',
+		canActivate: [adminGuard, validAccountGuard],
+		loadChildren: () => import('./statistics/statistics.module').then(m => m.StatisticsModule),
+		data: { animation: 'isBottom'}
 	},
 ]
 

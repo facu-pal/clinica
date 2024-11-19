@@ -90,13 +90,13 @@ export class UserListComponent {
 		});
 
 		dialogRef.componentInstance.exportBtn = true;
-		dialogRef.componentInstance.exportBtnText = 'Download Excel';
+		dialogRef.componentInstance.exportBtnText = 'Descargar Excel';
 		dialogRef.componentInstance.patient = patient;
 
 		dialogRef.afterClosed().subscribe(list => {
 			if (list) {
 				const parsedList = this.parseList(list);
-				this.downloadXlsx(parsedList, `${patient.idNo}_medical_history.xlsx`);
+				this.downloadXlsx(parsedList, `${patient.firstName}_${patient.lastName}_Historial_medico.xlsx`);
 			}
 		});
 	}

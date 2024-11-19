@@ -9,5 +9,5 @@ html, body {
     background: rgba(85, 112, 246, 0.808);
     min-height: 100vh; /* Asegura que cubra toda la pantalla */
    
-    padding: 20px 0;
+    padding-top: 20px 0;
 }

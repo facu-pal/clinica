@@ -26,6 +26,31 @@
 			</div>
 
 			<div class="spec-shift" *ngIf="specialist">
+
+				<h3>Días de trabajo:</h3>
+				<div class="list-group-inline">
+					<input type="checkbox" class="btn-check" id="sunday" autocomplete="off" (change)="toggleWorkingDay(0)" [checked]="specialist.workingDays.includes(0)" />
+					<label class="btn btn-outline-primary mx-1 mb-1" for="sunday">Domingo</label>
+		  
+					<input type="checkbox" class="btn-check" id="monday" autocomplete="off" (change)="toggleWorkingDay(1)" [checked]="specialist.workingDays.includes(1)" />
+					<label class="btn btn-outline-primary mx-1 mb-1" for="monday">Lunes</label>
+		  
+					<input type="checkbox" class="btn-check" id="tuesday" autocomplete="off" (change)="toggleWorkingDay(2)" [checked]="specialist.workingDays.includes(2)" />
+					<label class="btn btn-outline-primary mx-1 mb-1" for="tuesday">Martes</label>
+		  
+					<input type="checkbox" class="btn-check" id="wednesday" autocomplete="off" (change)="toggleWorkingDay(3)" [checked]="specialist.workingDays.includes(3)" />
+					<label class="btn btn-outline-primary mx-1 mb-1" for="wednesday">Miércoles</label>
+		  
+					<input type="checkbox" class="btn-check" id="thursday" autocomplete="off" (change)="toggleWorkingDay(4)" [checked]="specialist.workingDays.includes(4)" />
+					<label class="btn btn-outline-primary mx-1 mb-1" for="thursday">Jueves</label>
+		  
+					<input type="checkbox" class="btn-check" id="friday" autocomplete="off" (change)="toggleWorkingDay(5)" [checked]="specialist.workingDays.includes(5)" />
+					<label class="btn btn-outline-primary mx-1 mb-1" for="friday">Viernes</label>
+		  
+					<input type="checkbox" class="btn-check" id="saturday" autocomplete="off" (change)="toggleWorkingDay(6)" [checked]="specialist.workingDays.includes(6)" />
+					<label class="btn btn-outline-primary mx-1 mb-1" for="saturday">Sábado</label>
+				  </div>
+
 				<hr class="mb-lg-5">
 				<h3>Horario de trabajo:</h3>
 				<div class="row">
