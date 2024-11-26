@@ -1,4 +1,61 @@
-.bg-custom {
+/* .bg-custom {
 	background: rgba(85, 112, 246, 0.808);
     min-height: 95vh;
+} */
+
+.container {
+  max-width: 1000px; /* Ancho máximo del contenedor */
+  margin: 0 auto; /* Centra el contenedor */
+}
+
+.card {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #007bff; 
+  width: 300px; 
+  height: 350px;
+  border-radius: 10px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card img {
+  max-width: 80px; /* Tamaño máximo de la imagen */
+  height: 80px; /* Altura fija de la imagen */
+  border-radius: 50%;
+  margin-bottom: 1rem; /* Margen inferior de la imagen */
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1.2rem; /* Tamaño de la fuente del título */
+  margin-bottom: 0.5rem; /* Margen inferior del título */
+}
+
+.card-text {
+  font-size: 0.9rem; /* Tamaño de la fuente del texto */
+  margin-bottom: 0.5rem; /* Margen inferior del texto */
+}
+
+ul {
+  text-align: left;
+  padding-left: 0;
+}
+
+ul li {
+  list-style: none;
+}
+
+.btn {
+  align-self: center;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  margin-top: 0.5rem; /* Margen superior del botón */
 }

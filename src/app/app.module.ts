@@ -33,6 +33,9 @@ import { ApptFilterComponent } from './components/appointments/appt-filter/appt-
 import { FormErrorDirective } from './directives/form-error.directive';
 import { TooltipDirective } from './directives/tooltip.directive';
 import { UserNamePipe } from './pipes/user-name.pipe';
+import { CapitalizePipe } from './pipes/capitalize.pipe';
+
+
 
 @NgModule({
 	declarations: [
@@ -57,6 +60,8 @@ import { UserNamePipe } from './pipes/user-name.pipe';
 		FormErrorDirective,
 		TooltipDirective,
 		UserNamePipe,
+  		CapitalizePipe,
+		
 	],
 	imports: [
 		BrowserModule,

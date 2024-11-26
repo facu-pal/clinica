@@ -28,9 +28,13 @@ export class ApptFilterComponent {
 					this.includesFilterInput(appt.date.toDateString()) ||
 					this.includesFilterInput(appt.specReview) ||
 					(appt.diagnosis &&
-						(this.includesFilterInput(appt.diagnosis.additionalData[0].key) ||
-							this.includesFilterInput(appt.diagnosis.additionalData[1].key) ||
-							this.includesFilterInput(appt.diagnosis.additionalData[2].key))) ||
+						(this.includesFilterInput(appt.diagnosis.height.toString()) ||
+						this.includesFilterInput(appt.diagnosis.weight.toString()) ||
+						this.includesFilterInput(appt.diagnosis.tempC.toString()) ||
+						this.includesFilterInput(appt.diagnosis.pressure) ||
+						appt.diagnosis.additionalData.length > 0 && this.includesFilterInput(appt.diagnosis.additionalData[0]?.key) ||
+						appt.diagnosis.additionalData.length > 1 && this.includesFilterInput(appt.diagnosis.additionalData[1]?.key) ||
+						appt.diagnosis.additionalData.length > 2 && this.includesFilterInput(appt.diagnosis.additionalData[2]?.key))) ||
 					this.includesFilterInput(appt.patReview)
 			);
 		} else {
@@ -38,9 +42,13 @@ export class ApptFilterComponent {
 		}
 
 		this.filteredList.emit(appointments);
+		//console.log('Appointment List:', this.appointmentList);
 	}
 
 	private includesFilterInput(value: string): boolean {
 		return value.toLowerCase().includes(this.filterInput.toLowerCase());
 	}
 }
+
+
+

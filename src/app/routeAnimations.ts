@@ -9,9 +9,10 @@ import {
 
 export const animations =
 	trigger('routeAnimations', [
-		transition('isRight => isLeft', slideTo('left')),
+	
 		transition('* => isRight', slideTo('right')),
-
+		transition('isLeft => *', slideTo('left')),
+		transition('* => isLeft', slideTo('left')),
 		transition('* => isTop', slideTo('top')),
 		transition('* => isBottom', slideTo('bottom')),
 

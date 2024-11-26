@@ -1,0 +1,25 @@
+/* Añade esto a tu archivo CSS */
+
+/* Asegura que el tbody tenga un scroll y mantenga el ancho correcto */
+.table-responsive {
+    max-height: 500px; /* Ajusta esta altura según tus necesidades */
+    overflow-y: auto;
+    width: 100%;
+  }
+  
+  .table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Asegura que las celdas se ajusten al contenido y mantengan el alineamiento adecuado */
+  .table thead th, .table tbody td {
+    width: auto;
+    text-align: left;   
+  }
+  
+  /* Añade bordes a las celdas para un mejor alineamiento visual */
+  .table thead th, .table tbody td {
+    border: 1px solid #ddd; /* Ajusta según tu diseño */
+  }
+  

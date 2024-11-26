@@ -57,7 +57,7 @@ export class StatsComponent {
 		Loader.close();
 	}
 
-	//#region Appointments per day
+	
 	getApptsDayData() {
 		const dayAppt: Array<{ date: Date, appointments: Appointment[] }> =
 			this.groupApptsByDay();
@@ -102,9 +102,7 @@ export class StatsComponent {
 
 		return Array.from(dayAppt.values());
 	}
-	//#endregion
 
-	//#region Appointments per specialty
 	getApptsSpecData() {
 		const specAppt: Array<{ specialty: Specialty, appointments: Appointment[] }> =
 			this.groupApptsBySpec();
@@ -147,14 +145,12 @@ export class StatsComponent {
 		return Array.from(specAppt.values());
 	}
 
-	//#endregion
-
-	//#region Appointments between dates
+	
 	getApptsBetweenDatesData(apptsList: Array<Appointment>) {
 		const apptsByDate = new Map<string, Appointment[]>();
 
 		apptsList.forEach(appt => {
-			const dateString = appt.date.toISOString().split('T')[0]; // Use ISO date without time
+			const dateString = appt.date.toISOString().split('T')[0]; 
 			if (!apptsByDate.has(dateString)) {
 				apptsByDate.set(dateString, []);
 			}
@@ -203,8 +199,8 @@ export class StatsComponent {
 		return chartData;
 	}
 
-	public newApptTimeStart: string = '2023-11-01';
-	public newApptTimeEnd: string = '2023-12-15';
+	public newApptTimeStart: string = '2024-10-01';
+	public newApptTimeEnd: string = '2024-12-15';
 	loadChart3() {
 		const data = this.getApptsBetweenDatesData(
 			this.appointments.filter(appt =>
@@ -213,8 +209,8 @@ export class StatsComponent {
 		this.chartsData[2] = { ...data };
 	}
 
-	public apptDoneTimeStart: string = '2023-11-01';
-	public apptDoneTimeEnd: string = '2023-12-15';
+	public apptDoneTimeStart: string = '2024-10-01';
+	public apptDoneTimeEnd: string = '2024-12-15';
 	loadChart4() {
 		const data = this.getApptsBetweenDatesData(
 			this.appointments.filter(appt => appt.status === 'done'
@@ -243,7 +239,7 @@ export class StatsComponent {
 			pageOrientation: 'landscape',
 			pageMargins: [40, 10],
 			content: [
-				{ text: 'Charts', fontSize: 18, bold: true, decoration: 'underline', alignment: 'center', margin: [0, 0, 0, 5] },
+				{ text: 'Graficos', fontSize: 18, bold: true, decoration: 'underline', alignment: 'center', margin: [0, 0, 0, 5] },
 				{
 					table: {
 						headerRows: 0,
@@ -282,6 +278,43 @@ export class StatsComponent {
 			]
 		};
 		const date = datePipe.transform(new Date(), 'dd-MM-yy');
-		pdf.createPdf(<TDocumentDefinitions>docDef).download('appts_charts_' + date);
+		pdf.createPdf(<TDocumentDefinitions>docDef).download('Graficos_' + date);
 	}
+
+
+	downloadChart(chartId: string) {
+		const chartCanvas = document.getElementById(chartId) as HTMLCanvasElement;
+		const docDef = {
+			content: [
+				{
+					image: chartCanvas.toDataURL('image/png'),
+					width: 500 
+				}
+			]
+		};
+	
+		let nombre: string;
+		switch(chartId) {
+			case 'chart1':
+				nombre = 'turnos_por_dia_grafico';
+				break;
+			case 'chart2':
+				nombre = 'Turnos_por_especialidad_grafico';
+				break;
+			case 'chart3':
+				nombre = 'Turnos_entre_2_fechas_grafico';
+				break;
+			case 'chart4':
+				nombre = 'Turnos_terminados_entre_2_fechas_grafico';
+				break;
+			default:
+				nombre = 'grafico';
+				break;
+		}
+	
+		const date = datePipe.transform(new Date(), 'dd-MM-yy');
+		pdf.createPdf(<TDocumentDefinitions>docDef).download(`${nombre}_${date}.pdf`);
+	}
+	
+
 }

@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, getDocs, setDoc, deleteDoc, updateDoc, getDoc, DocumentReference, DocumentData, QuerySnapshot, onSnapshot, query } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, where, doc, getDocs, setDoc, deleteDoc, updateDoc, getDoc, DocumentReference, DocumentData, QuerySnapshot, onSnapshot, query } from '@angular/fire/firestore';
 import { User } from '../classes/user';
 const userPath = 'users';
+import { Timestamp } from '@angular/fire/firestore';
+
+import { Appointment } from '../classes/appointment';
+
+@Injectable({
+    providedIn: 'root'
+})
+
 
 @Injectable({
 	providedIn: 'root'
@@ -89,4 +97,22 @@ export class DatabaseService {
 
 		return arrayUsers[index];
 	}
+	
+	async obtenerHistorialMedico(pacienteId: string): Promise<Array<Appointment>> {
+        const col = collection(this.firestore, 'appointments');
+        const q = query(col, where('patient.id', '==', pacienteId), where('status', '==', 'done'));
+        const querySnapshot = await getDocs(q);
+        const appointments: Array<Appointment> = [];
+
+        querySnapshot.forEach((doc) => {
+            const appointment = doc.data() as Appointment;
+            appointment.date = appointment.date instanceof Timestamp ? appointment.date.toDate() : appointment.date;
+            appointments.push(appointment);
+        });
+
+        return appointments;
+    }
+
+
+
 }

@@ -7,6 +7,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { PatientHistoryComponent } from '../patient-history/patient-history.component';
 
+import { Timestamp } from 'firebase/firestore'; // Asegúrate de importar Timestamp
+
+
 @Component({
 	selector: 'app-my-patients',
 	templateUrl: './my-patients.component.html',
@@ -23,20 +26,25 @@ export class MyPatientsComponent {
 
 	ngOnInit() {
 		this.db.listenColChanges<Appointment>(
-			'appointments',
-			this.myAppointments,
-			(appt: Appointment) => appt.specialist.id === this.specialist.id,
-			(a1: Appointment, a2: Appointment) => a1.date > a2.date ? 1 : -1
+		  'appointments',
+		  this.myAppointments,
+		  (appt: Appointment) => appt.specialist.id === this.specialist.id,
+		  (a1: Appointment, a2: Appointment) => {
+			const date1 = new Date(a1.date);
+			const date2 = new Date(a2.date);
+			return date1.getTime() - date2.getTime();
+		  }
 		);
-
+	  
 		this.db.listenColChanges<User>(
-			'users',
-			this.patients,
-			this.patFilter,
-			undefined,
-			(async user => user as Patient)
+		  'users',
+		  this.patients,
+		  this.patFilter,
+		  undefined,
+		  async user => user as Patient
 		);
-	}
+	  }
+	  
 
 	readonly patFilter = (patient: User) =>
 		patient.role === 'patient' && this.myAppointments.some(appt => appt.patient.id === patient.id);
@@ -50,4 +58,24 @@ export class MyPatientsComponent {
 
 		dialogRef.componentInstance.patient = patient;
 	}
+
+
+	  
+
+	getLastThreeAppointments(patientId: string): Appointment[] {
+	  return this.myAppointments
+		.filter(appt => appt.patient.id === patientId)
+		.map(appt => {
+		  const date = (appt.date instanceof Timestamp) ? appt.date.toDate() : new Date(appt.date);
+		  console.log('Fecha original:', appt.date);
+		  console.log('Fecha convertida:', date);
+		  return { ...appt, date: date };
+		})
+		.sort((a1, a2) => a2.date.getTime() - a1.date.getTime())
+		.slice(0, 3);
+	}
+	
+	  
+	  
+	  
 }

@@ -1,0 +1,18 @@
+
+.logs-container {
+
+    margin-bottom: 50px; /* Agrega un margen inferior a la sección de logs */
+    
+}
+
+ .d-flex.justify-content-center.mb-3 {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 10px 0;  
+} 
+
+/* Agrega margen inferior para el contenedor de logs */
+.app-logs {
+    margin-bottom: 20px; /* Ajusta el valor según tus necesidades */
+}

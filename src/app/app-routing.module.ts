@@ -57,7 +57,7 @@ const routes: Routes = [
 		path: 'perfil',
 		canActivate: [notPatGuard, validAccountGuard],
 		component: AccountComponent,
-		data: { animation: 'isTop'}
+		data: { animation: 'isLeft'}
 	},
 	{
 		path: 'usuarios',
@@ -88,13 +88,13 @@ const routes: Routes = [
 		path: 'mi-perfil',
 		canActivate: [patGuard, validAccountGuard],
 		component: PatProfileComponent,
-		data: { animation: 'isBottom'}
+		data: { animation: 'isLeft'}
 	},
 	{
 		path: 'informes',
 		canActivate: [adminGuard, validAccountGuard],
 		loadChildren: () => import('./statistics/statistics.module').then(m => m.StatisticsModule),
-		data: { animation: 'isBottom'}
+		data: { animation: 'isLeft'}
 	},
 ]
 

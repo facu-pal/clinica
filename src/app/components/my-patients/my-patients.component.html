@@ -1,17 +1,29 @@
-<div class="card bg-custom">
-	<h2 class="text-center my-5">Mis pacientes</h2>
-	
-	<div class="patients mb-2" *ngIf="patients.length > 0">
-		<app-user-btn-list [userList]="patients" (btnPressed)="showMedicalHistory(parsePatient($event))"
-			containerClass="col-md-2 image-div d-flex flex-column align-items-center"
-			imgClass="border border-3 border-black rounded" 
-			imgWidth="100px"
-			imgHeight="100px"
-			[specialistLimit]="0"
-			[adminLimit]="0"
-			nameDisplay="top"
-			nameFs="18px"
-		>
-		</app-user-btn-list>
-	</div>
+
+<div class="container bg-custom">
+    <h2 class="text-center my-5">Mis pacientes</h2>
+    
+    <div class="row justify-content-center mb-2">
+        <div class="col-md-4 mb-3" *ngFor="let patient of patients">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <div style="width: 80px; height: 80px;" class="overflow-hidden border border-1 border-black rounded-circle d-flex align-items-center justify-content-center">
+                            <img [src]="patient.imgUrl1" class="img-fluid" alt="{{patient.firstName}}">
+                        </div>
+                    </div>
+                    <h5 class="card-title">{{patient.firstName | capitalize}} {{patient.lastName | capitalize}}</h5>
+                    <p class="card-text">Últimos 3 turnos:</p>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let appt of getLastThreeAppointments(patient.id)">
+                            {{appt.date | date:'dd/MM/yyyy, HH:mm'}} - {{appt.specialty.value}}
+                        </li>
+                    </ul>
+                    <button class="btn btn-primary mt-2" (click)="showMedicalHistory(patient)">
+                        Ver historial clínico
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

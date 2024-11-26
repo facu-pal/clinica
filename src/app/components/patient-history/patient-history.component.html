@@ -1,51 +1,54 @@
 <div class="main pb-5">
 
 	<app-appt-filter
-		[appointmentList]="pastAppointments"
-		(filteredList)="appointmentsToShow = $event">
+	  [appointmentList]="pastAppointments"
+	  (filteredList)="appointmentsToShow = $event">
 	</app-appt-filter>
-
+  
 	<div class="container d-flex justify-content-center">
+	  <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
 		<table class="table table-striped align-middle mb-0 bg-white table-hover w-75">
-			<thead class="bg-light">
-				<tr>
-					<th>especializacion</th>
-					<th class="text-center">Fecha</th>
-					<th class="text-center">Diagnostico</th>
-					<th class="text-center">Reseña</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let appt of appointmentsToShow">
-					<td class="col-md-3">
-						<div class="d-flex align-items-center">
-							<div class="ms-3">
-								<p class="fw-bold mb-0">{{appt.specialist | userName}}</p>
-								<p class="text-muted mb-0">{{appt.specialty.value}}</p>
-							</div>
-						</div>
-					</td>
-					<td class="col-md-2 text-center">
-						<p class="fw-normal mb-0">{{appt.date | date: 'YYYY/MM/dd, HH:mm'}}</p>
-					</td>
-					<td class="col-md-4 text-center">
-						<p class="fw-normal mb-0 break-spaces" *ngIf="appt.diagnosis">{{getDataDiag(appt.diagnosis)}}</p>
-					</td>
-					<td class="col-md-3 text-center">
-						<p class="fw-normal mb-0 break-spaces" *ngIf="appt.patReview">{{appt.patReview}}</p>
-					</td>
-				</tr>
-				<p *ngIf="appointmentsToShow.length === 0" class="text-center">
-					No hay citas historial para mostrar.
-				</p>
-			</tbody>
+		  <thead class="bg-light">
+			<tr>
+			  <th>especializacion</th>
+			  <th class="text-center">Fecha</th>
+			  <th class="text-center">Diagnostico</th>
+			  <th class="text-center">Reseña</th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr *ngFor="let appt of appointmentsToShow">
+			  <td class="col-md-3">
+				<div class="d-flex align-items-center">
+				  <div class="ms-3">
+					<p class="fw-bold mb-0">{{appt.specialist | userName}}</p>
+					<p class="text-muted mb-0">{{appt.specialty.value}}</p>
+				  </div>
+				</div>
+			  </td>
+			  <td class="col-md-2 text-center">
+				<p class="fw-normal mb-0">{{appt.date | date: 'YYYY/MM/dd, HH:mm'}}</p>
+			  </td>
+			  <td class="col-md-4 text-center">
+				<p class="fw-normal mb-0 break-spaces" *ngIf="appt.diagnosis">{{getDataDiag(appt.diagnosis)}}</p>
+			  </td>
+			  <td class="col-md-3 text-center">
+				<p class="fw-normal mb-0 break-spaces" *ngIf="appt.patReview">{{appt.patReview}}</p>
+			  </td>
+			</tr>
+			<tr *ngIf="appointmentsToShow.length === 0">
+			  <td colspan="4" class="text-center">No hay citas historial para mostrar.</td>
+			</tr>
+		  </tbody>
 		</table>
+	  </div>
 	</div>
 	<div class="d-flex justify-content-center">
-		<button *ngIf="exportBtn" class="btn btn-primary btn-md my-3"
-			(click)="emitList(appointmentsToShow)">{{exportBtnText}}</button>
+	  <button *ngIf="exportBtn" class="btn btn-primary btn-md my-3"
+		(click)="emitList(appointmentsToShow)">{{exportBtnText}}</button>
 	</div>
-
+  
 	<button class="btn btn-outline-danger rounded-circle position-absolute top-0 end-0 m-4" *ngIf="dialogRef"
-		(click)="dialogRef.close()">X</button>
-</div>
+	  (click)="dialogRef.close()">X</button>
+  </div>
+  

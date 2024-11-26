@@ -30,7 +30,7 @@ export class PatProfileComponent {
 			pageOrientation: 'landscape',
 			header: {
 				columns: [
-					{ text: datePipe.transform(date, 'longDate'), margin: [15, 15, 0, 0], alignment: 'left' },
+					{ text: datePipe.transform(date, 'dd/MM/yyyy'), margin: [15, 15, 0, 0], alignment: 'left' },
 					{
 						image: await this.getBase64ImageFromURL('https://img.icons8.com/?size=500&id=43219&format=png&color=000000'),
 						fit: [25, 25],

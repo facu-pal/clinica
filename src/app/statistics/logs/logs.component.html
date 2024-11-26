@@ -1,46 +1,55 @@
+<div class="bg-custom">
+
 <h2 class="text-center mt-5">Logs</h2>
-<div class="container d-flex justify-content-center">
-	<table class="table table-striped align-middle mb-0 bg-white table-hover w-75">
-		<thead class="bg-light">
-			<tr>
-				<th>Usuarios</th>
-				<th class="text-center">Rol</th>
-				<th class="text-center">DNI</th>
-				<th class="text-center">Fecha</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let log of logs">
-				<td class="col-md-2">
-					<div class="d-flex align-items-center">
-						<div style="width: 60px; height: 60px;"
-							class="overflow-hidden border border-1 border-black rounded-circle d-flex align-items-center">
-							<img [src]="log.user.imgUrl1" [alt]="'img_'+log.user.idNo" [id]="log.user.idNo">
-						</div>
-						<div class="ms-3">
-							<p class="fw-bold mb-0">{{log.user.firstName}} {{log.user.lastName}}, {{log.user.age}}</p>
-							<p class="text-muted mb-0">{{log.user.email}}</p>
-						</div>
-					</div>
-				</td>
-				<td class="col-md-1 text-center">
-					<div class="ms-3" [ngSwitch]="log.user.role">
-						<span class="badge rounded-pill bg-success" *ngSwitchCase="'admin'">Admin</span>
-						<span class="badge rounded-pill bg-danger" *ngSwitchCase="'patient'">Paciente</span>
-						<span class="badge rounded-pill bg-warning" *ngSwitchCase="'specialist'">Especialista</span>
-					</div>
-				</td>
-				<td class="col-md-1 text-center">
-					<div class="ms-3">
-						<p class="fw-normal mb-0">{{log.user.idNo}}</p>
-					</div>
-				</td>
-				<td class="col-md-1 text-center">
-					<div class="ms-3">
-						<p class="fw-bold mb-0">{{log.date | date: 'dd/MM/YYYY, HH:mm:ss'}}</p>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div class="d-flex justify-content-center mb-3">
+    <button class="btn btn-md btn-outline-secondary" (click)="downloadLogs()">Descargar Log</button>
+</div>
+<div class="container d-flex justify-content-center table-container mb-3">
+    <div class="table-wrapper" appScrollable>
+        <table class="table table-striped align-middle mb-0 bg-white table-hover w-75">
+            <thead class="bg-light">
+                <tr>
+                    <th>Usuarios</th>
+                    <th class="text-center">Rol</th>
+                    <th class="text-center">DNI</th>
+                    <th class="text-center">Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let log of logs">
+                    <td class="col-md-2">
+                        <div class="d-flex align-items-center">
+                            <div style="width: 60px; height: 60px;" class="overflow-hidden border border-1 border-black rounded-circle d-flex align-items-center">
+                                <img [src]="log.user.imgUrl1" [alt]="'img_'+log.user.idNo" [id]="log.user.idNo">
+                            </div>
+                            <div class="ms-3">
+                                <p class="fw-bold mb-0">{{log.user.firstName}} {{log.user.lastName}}, {{log.user.age}}</p>
+                                <p class="text-muted mb-0">{{log.user.email}}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="col-md-1 text-center compact-cell">
+                        <div class="ms-3">
+                            <span class="badge rounded-pill" [ngClass]="{
+                                'bg-success': log.user.role === 'admin',
+                                'bg-danger': log.user.role === 'patient',
+                                'bg-warning': log.user.role === 'specialist'
+                            }">{{ log.user.role | roleTransform }}</span>
+                        </div>
+                    </td>
+                    <td class="col-md-1 text-center">
+                        <div class="ms-3">
+                            <p class="fw-normal mb-0">{{log.user.idNo}}</p>
+                        </div>
+                    </td>
+                    <td class="col-md-1 text-center">
+                        <div class="ms-3">
+                            <p class="fw-bold mb-0">{{log.date | date: 'dd/MM/YYYY, HH:mm:ss'}}</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </div>

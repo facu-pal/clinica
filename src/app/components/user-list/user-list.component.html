@@ -16,7 +16,57 @@
 	</div>
 	<hr class="my-2">
 
-<h2 class="text-center ">Lista de usuarios</h2>
+<h2 class="text-center">Lista de usuarios</h2>
+
+<div class="container d-flex justify-content-center mb-4">
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" id="filterAdmin" [(ngModel)]="showAdmins" (change)="filterUsers()">
+    <label class="form-check-label" for="filterAdmin">Admin</label>
+  </div>
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" id="filterSpecialist" [(ngModel)]="showSpecialists" (change)="filterUsers()">
+    <label class="form-check-label" for="filterSpecialist">Especialista</label>
+  </div>
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" id="filterPatient" [(ngModel)]="showPatients" (change)="filterUsers()">
+    <label class="form-check-label" for="filterPatient">Paciente</label>
+  </div>
+</div>
+
+<div class="container d-flex justify-content-center flex-wrap">
+  <div *ngFor="let user of filteredUsers" class="card m-3" style="width: 18rem;" >
+    <div class="card-body text-center">
+      <div class="d-flex align-items-center justify-content-center mb-3">
+        <div style="width: 60px; height: 60px;" [class]="user.role === 'patient' ? 'pat-img' : ''"
+          class="overflow-hidden border border-1 border-black rounded-circle d-flex align-items-center">
+          <img [src]="user.imgUrl1" [alt]="'img_'+user.idNo" class="img-fluid">
+        </div>
+      </div>
+      <h5 class="card-title">{{user | userName }}, {{user.age}}</h5>
+      <p class="card-text">{{user.email}}</p>
+      <p class="card-text">
+        <span class="badge" [class.bg-success]="user.role === 'admin'"
+          [class.bg-danger]="user.role === 'patient'"
+          [class.bg-warning]="user.role === 'specialist'">{{user.role | titlecase}}</span>
+      </p>
+      <button *ngIf="user.role === 'patient'" class="btn btn-primary mb-2" (click)="showMedicalHistory(user)">Ver Historial</button>
+      <button *ngIf="user.role === 'patient'" class="btn btn-secondary" (click)="descargarHistoriaClinica(user)" >Descargar Historial Médico</button>
+      <button *ngIf="user.role === 'specialist'" class="btn btn-primary" (click)="toggleEnable(user)">
+        {{(parseSpecialist(user))!.isEnabled ? 'Deshabilitar' : 'Habilitar'}}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+</div>
+
+
+<!-- <h2 class="text-center ">Lista de usuarios</h2>
 <div class="container d-flex justify-content-center">
 	<table class="table table-striped align-middle mb-0 bg-white table-hover w-75">
 		<thead class="bg-light">
@@ -70,8 +120,4 @@
 			</tr>
 		</tbody>
 	</table>
-</div>
-
-
-
-</div>
+</div> -->

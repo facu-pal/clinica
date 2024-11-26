@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject,AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Admin } from 'src/app/classes/admin';
 import { Patient } from 'src/app/classes/patient';
@@ -20,24 +20,39 @@ import { Appointment } from 'src/app/classes/appointment';
 export class UserListComponent {
 	readonly userInSession: Patient | Specialist | Admin;
 	users: Array<User> = [];
+	filteredUsers: Array<User> = [];
 	@Input() dbColPath: string = 'users';
 
 	@Input() userFilter: ((user: User) => boolean) | undefined;
 	creatingUser: boolean = false;
 
+	showAdmins: boolean = true;
+	showSpecialists: boolean = true; 
+	showPatients: boolean =true;
+
 	constructor(private db: DatabaseService, private dialog: MatDialog) {
 		this.userInSession = inject(AuthService).LoggedUser!;
 	}
 
+
 	async ngOnInit() {
+		// Escuchar cambios en la colección de usuarios
 		this.db.listenColChanges<User>(
-			this.dbColPath,
-			this.users,
-			this.userFilter,
-			(u1: User, u2: User) => u1.lastName > u2.lastName ? 1 : -1,
-			this.userMap
+		  this.dbColPath,
+		  this.users,
+		  this.userFilter,
+		  (u1: User, u2: User) => u1.lastName > u2.lastName ? 1 : -1,
+		  this.userMap
 		);
-	}
+	  }
+	
+	  ngAfterViewInit() {
+		// Esperar un momento para que los datos se carguen
+		setTimeout(() => {
+		  this.filteredUsers = [...this.users]; // Inicializar usuarios filtrados con todos los usuarios cargados
+		  this.filterUsers(); // Aplicar filtros iniciales
+		}, 1000); // Ajustar el tiempo según sea necesario
+	  }
 
 	private readonly userMap = async (user: User) => {
 		switch (user.role) {
@@ -49,6 +64,15 @@ export class UserListComponent {
 				return user as Admin;
 		}
 	};
+
+	filterUsers() { 
+		this.filteredUsers = this.users.filter(user => { 
+		  if (user.role === 'admin' && !this.showAdmins) return false;
+		  if (user.role === 'specialist' && !this.showSpecialists) return false; 
+		  if (user.role === 'patient' && !this.showPatients) return false;
+		  return true; 
+		}); 
+	}
 
 	parseSpecialist = (user: User) => {
 		return user as Specialist;
@@ -101,6 +125,41 @@ export class UserListComponent {
 		});
 	}
 
+
+
+	// Agrega este método en tu componente
+	async descargarHistoriaClinica(user: User) {
+		if (user.role !== 'patient') return;
+	
+		const paciente = user as Patient;
+	
+		Swal.fire({
+			title: '¿Estás seguro?',
+			text: "¿Deseas descargar esta historia clínica?",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Sí',
+			cancelButtonText: 'No'
+		}).then(async (result) => {
+			if (result.isConfirmed) {
+				try {
+					const listaDeCitas = await this.db.obtenerHistorialMedico(paciente.id);
+					const listaParseada = this.parseList(listaDeCitas);
+					this.downloadXlsx(listaParseada, `${paciente.firstName}_${paciente.lastName}_Historial_medico.xlsx`);
+					ToastSuccess.fire('¡Descarga exitosa!', 'La historia clínica ha sido descargada.');
+				} catch (error) {
+					ToastError.fire({ title: 'Oops...', text: 'Hubo un problema al descargar la historia clínica.' });
+				}
+			}
+		});
+	}
+	
+
+
+
+
+	
+
 	parseList(list: Array<Appointment>) {
 		const formattedList: Array<any> = [];
 		if (list.length > 0) {
@@ -122,7 +181,7 @@ export class UserListComponent {
 				)
 			}
 		} else {
-			formattedList.push({specialist: 'There are no appointments to show.'});
+			formattedList.push({specialist: 'No hay citas para mostrar.'});
 		}
 
 		return formattedList;
@@ -140,4 +199,6 @@ export class UserListComponent {
 		ToastSuccess.fire('User created!', `${user.role} #${user.idNo}.`);
 		this.creatingUser = false;
 	}
+
+
 }
